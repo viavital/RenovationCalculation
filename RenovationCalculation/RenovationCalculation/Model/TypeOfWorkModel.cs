@@ -8,6 +8,7 @@ namespace RenovationCalculation.Model
 {
     class TypeOfWorkModel
     {
+        public int ID { get; set; }
         public string TypeOfWorkName { get; set; }
 
         public int PriceOfWork { get; set; }
