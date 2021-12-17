@@ -8,12 +8,12 @@ using RenovationCalculation.Model;
 
 namespace RenovationCalculation
 {
-    class BbContext : Microsoft.EntityFrameworkCore.DbContext
+    class WorksDBContext : DbContext
     {
         public DbSet<TypeOfWorkModel> Works { get; set; }
         public DbSet<WorkerModel> Workers { get; set; }
 
-        public readonly string DbPath = "../../../main.db";
+        public readonly string DbPath = "../../../DatabaseOfWorks.db";
         protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite($"Data Source={DbPath}");
     }
 }

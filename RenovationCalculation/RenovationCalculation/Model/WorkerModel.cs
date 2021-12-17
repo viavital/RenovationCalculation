@@ -8,6 +8,7 @@ namespace RenovationCalculation.Model
 {
     class WorkerModel
     {
+        public int ID { get; set; }
         public string Name { get; set;}
 
         public bool IsBusy { get; set; }

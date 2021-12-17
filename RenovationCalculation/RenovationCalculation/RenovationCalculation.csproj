@@ -13,11 +13,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="RenovationCalculation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="ViewModel\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="RenovationCalculation.csproj" />
+    <None Update="DatabaseOfWorks.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
