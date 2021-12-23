@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RenovationCalculation"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Calculation of renovating works" Height="500" Width="800" MinHeight="250" MinWidth="400">
+        Title="Calculation of renovating works" Height="500" Width="800" MinHeight="250" MinWidth="600">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.66*"/>
@@ -15,16 +15,27 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="0.66*"/>
+                <RowDefinition Height="0.26*"/>
             </Grid.RowDefinitions>
             <Label Content="Total sum"  Grid.Row="1"  Height="50" Width="154" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
             <Label Content="Total sum = " Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="50" Width="159"/>
-            <StackPanel Grid.Row="0" Grid.Column="0">
-                <ListBox x:Name="ListBoxOfWorks" />
-            </StackPanel>
-               
+            <ListBox x:Name="ListBoxOfWorks"  Grid.Row="0" Grid.Column="0" >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="5">
+                            <TextBlock FontSize="28" Text="Work" />
+                            <TextBlock Text="Worker" />
+                            <TextBlock Text="Price" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+
+
 
 
         </Grid>
+        <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"  Content="New work" FontSize="25"  Margin="50,50,20,20" Height="52" Width="153"/>
     </Grid>
 </Window>
