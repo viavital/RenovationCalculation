@@ -10,7 +10,7 @@ namespace RenovationCalculation.Model
     {
         public int ID { get; set; }
         public string Name { get; set;}
-
-        public bool IsBusy { get; set; }
+        public int PricePerHour { get; set; }
+        public int WorkId { get; set; }       
     }
 }
