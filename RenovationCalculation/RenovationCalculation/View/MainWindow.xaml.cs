@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using RenovationCalculation.Model;
 using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using RenovationCalculation.ApplictionVewModel;
 
 namespace RenovationCalculation
 {
@@ -25,8 +26,9 @@ namespace RenovationCalculation
     {
         public MainWindow()
         {
-            InitializeComponent();
-            
+           InitializeComponent();
+           DataContext = new StackOfAvaliableWorksViewModel();
+
         }
     }
 }
