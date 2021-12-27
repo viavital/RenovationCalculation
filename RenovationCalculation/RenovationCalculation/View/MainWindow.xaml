@@ -7,34 +7,37 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:ApplictionVewModel="clr-namespace:RenovationCalculation.ApplictionVewModel" x:Class="RenovationCalculation.MainWindow"
         mc:Ignorable="d"
-        Title="Calculation of renovating works" Height="500" Width="800" MinHeight="250" MinWidth="600">
+        Title="Calculation of renovating works" Height="500" Width="800" MinHeight="380" MinWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.66*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="0" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="0.26*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" >
-                <TextBox FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam"  />
-                <ComboBox ItemsSource="{Binding Workers}">
+            <StackPanel Grid.Row="0">
+                <TextBox x:Name="NameOfNewWorkTextBox" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <ComboBox x:Name="NameOfSelectedWorker" FontSize="20" materialDesign:HintAssist.Hint="Select worker"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" ItemsSource="{Binding Workers}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <TextBlock Text="Quantity" />
-                <TextBox Text="{Binding QuantityHoursOfWork, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
 
-            <Label Content="Total sum"  Grid.Row="1"  Height="50" Width="154" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
-            <Label Content="Total sum = " Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="50" Width="159"/>
+                <TextBox x:Name="EnteredQuantityOfHours" FontSize="20" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Quantity of hours" Cursor="IBeam" />
+
+                <TextBox x:Name="EnteredCostOfWork" FontSize="20" materialDesign:HintAssist.Hint="Enter cost of the work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" />
+            </StackPanel>           
+          
+            <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Content="Add new work" FontSize="18"  Margin="5.5" Height="45" Width="200" Cursor="Hand"/>
+
         </Grid>
 
         <Grid Grid.Column="1">
@@ -71,6 +74,5 @@
             </ListBox>
         </Grid>
 
-        <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"  Content="New work" FontSize="25"  Margin="50,50,20,20" Height="52" Width="153"/>
     </Grid>
 </Window>

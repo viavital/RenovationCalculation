@@ -24,11 +24,11 @@ namespace RenovationCalculation
     /// </summary>
     public partial class MainWindow : Window
     {
+        readonly StackOfAddingWorksViewModel _stackOfAddingWorksViewModel = new();
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new StackOfAvaliableWorksViewModel();
-
+            DataContext = _stackOfAddingWorksViewModel;
         }
     }
 }
