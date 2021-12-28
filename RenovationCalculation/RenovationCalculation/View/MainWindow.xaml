@@ -21,7 +21,7 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0">
-                <TextBox x:Name="NameOfNewWorkTextBox" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding enteredNewWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
 
                 <ComboBox x:Name="NameOfSelectedWorker" FontSize="20" materialDesign:HintAssist.Hint="Select worker"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" ItemsSource="{Binding Workers}">
                     <ComboBox.ItemTemplate>
@@ -34,9 +34,9 @@
                 <TextBox x:Name="EnteredQuantityOfHours" FontSize="20" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Quantity of hours" Cursor="IBeam" />
 
                 <TextBox x:Name="EnteredCostOfWork" FontSize="20" materialDesign:HintAssist.Hint="Enter cost of the work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" />
-            </StackPanel>           
-          
-            <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Content="Add new work" FontSize="18"  Margin="5.5" Height="45" Width="200" Cursor="Hand" Click="Button_AddWork_Click"/>
+            </StackPanel>
+
+            <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Content="Add new work" FontSize="18"  Margin="5.5" Height="45" Width="200" Cursor="Hand" Command="{Binding AddWorkCommand}" CommandParameter="{Binding}"/>
 
         </Grid>
 

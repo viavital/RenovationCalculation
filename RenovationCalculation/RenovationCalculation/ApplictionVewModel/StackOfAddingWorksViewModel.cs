@@ -17,7 +17,7 @@ namespace RenovationCalculation.ApplictionVewModel
         public List<TypeOfWorkModel> TypeOfWorks { get; set; }
         public List<WorkerModel> Workers { get; set; }
 
-        private TypeOfWorkModel EnteredTypeOfWork;
+        // private TypeOfWorkModel EnteredTypeOfWork;
         public StackOfAddingWorksViewModel()
         {
             using (WorksDBContext db = new WorksDBContext())
@@ -34,7 +34,7 @@ namespace RenovationCalculation.ApplictionVewModel
             set
             {
                 EnteredNewWork = value;
-                OnPropertyChanged("enteredNewWork");
+                OnPropertyChanged();
             }
         }
         private string SelectedWorker;
@@ -44,7 +44,7 @@ namespace RenovationCalculation.ApplictionVewModel
             set
             {
                 SelectedWorker = value;
-                OnPropertyChanged("selectedWorker");
+                OnPropertyChanged();
             }
         }
         private int EnteredQuantityOfWork;
@@ -54,7 +54,7 @@ namespace RenovationCalculation.ApplictionVewModel
             set
             {
                 EnteredQuantityOfWork = value;
-                OnPropertyChanged("enteredQuantityOfWork");
+                OnPropertyChanged();
             }
         }
         private int EnteredCostOfWork;
@@ -92,6 +92,22 @@ namespace RenovationCalculation.ApplictionVewModel
 
             }
 
+        }
+
+        private RelayCommand addWorkCommand;
+        public RelayCommand AddWorkCommand
+        {
+            get
+            {
+                return addWorkCommand ??
+                    (addWorkCommand = new RelayCommand(obj =>
+                    {
+                        var vm = obj as StackOfAddingWorksViewModel;
+                        var nameOfWork = vm.EnteredNewWork;
+                        //nameOfWork for example, other fields can be the same way.
+                        //here you can save to DB or do another work.
+                    }));
+            }
         }
     }
 }
