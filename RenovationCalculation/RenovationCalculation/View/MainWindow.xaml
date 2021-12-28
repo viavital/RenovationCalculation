@@ -36,7 +36,7 @@
                 <TextBox x:Name="EnteredCostOfWork" FontSize="20" materialDesign:HintAssist.Hint="Enter cost of the work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" />
             </StackPanel>           
           
-            <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Content="Add new work" FontSize="18"  Margin="5.5" Height="45" Width="200" Cursor="Hand"/>
+            <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Content="Add new work" FontSize="18"  Margin="5.5" Height="45" Width="200" Cursor="Hand" Click="Button_AddWork_Click"/>
 
         </Grid>
 

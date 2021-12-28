@@ -37,8 +37,8 @@ namespace RenovationCalculation.ApplictionVewModel
                 OnPropertyChanged("enteredNewWork");
             }
         }
-        private WorkerModel SelectedWorker;
-        public WorkerModel selectedWorker
+        private string SelectedWorker;
+        public string selectedWorker
         {
             get { return SelectedWorker; }
             set
@@ -57,13 +57,13 @@ namespace RenovationCalculation.ApplictionVewModel
                 OnPropertyChanged("enteredQuantityOfWork");
             }
         }
-        private int EnteresCostOfWork;
+        private int EnteredCostOfWork;
         public int enteresCostOfWork
         {
-            get { return EnteresCostOfWork; }
+            get { return EnteredCostOfWork; }
             set
             {
-                EnteresCostOfWork = value;
+                EnteredCostOfWork = value;
                 OnPropertyChanged("enteresCostOfWork");
             }
         }
@@ -74,6 +74,24 @@ namespace RenovationCalculation.ApplictionVewModel
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        public void CreateNewWork()
+        {
+            TypeOfWorkModel CreatingWork = new();
+            CreatingWork.TypeOfWorkName = enteredNewWork;
+            CreatingWork.QuantityHoursOfWork = enteredQuantityOfWork;
+            CreatingWork.TotalPriceOfWork = enteresCostOfWork;
+
+            int IdOfCreatingWork;
+            using (WorksDBContext dbContext = new ())
+            {
+                dbContext.Works.Add(CreatingWork);
+                dbContext.SaveChanges();
+                IdOfCreatingWork = CreatingWork.ID;
+
+            }
+
         }
     }
 }
