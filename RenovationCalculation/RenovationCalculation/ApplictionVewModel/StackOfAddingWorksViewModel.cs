@@ -15,16 +15,21 @@ namespace RenovationCalculation.ApplictionVewModel
     class StackOfAddingWorksViewModel : INotifyPropertyChanged
     {
         public List<TypeOfWorkModel> TypeOfWorks { get; set; }
+        public List<TypeOfWorkModel> typeOfWorks
+        {
+            get { return TypeOfWorks; }
+            set
+            {
+                TypeOfWorks = value;
+                OnPropertyChanged();
+            }
+        }
         public List<WorkerModel> Workers { get; set; }
 
         // private TypeOfWorkModel EnteredTypeOfWork;
         public StackOfAddingWorksViewModel()
         {
-            using (WorksDBContext db = new WorksDBContext())
-            {
-                Workers = db.Workers.ToList();
-                TypeOfWorks = db.Works.ToList();
-            }
+            RefreshDataBase();
         }
 
         private string EnteredNewWork;
@@ -58,7 +63,7 @@ namespace RenovationCalculation.ApplictionVewModel
             }
         }
         private int EnteredCostOfWork;
-        public int enteresCostOfWork
+        public int enteredCostOfWork
         {
             get { return EnteredCostOfWork; }
             set
@@ -76,24 +81,6 @@ namespace RenovationCalculation.ApplictionVewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-        public void CreateNewWork()
-        {
-            TypeOfWorkModel CreatingWork = new();
-            CreatingWork.TypeOfWorkName = enteredNewWork;
-            CreatingWork.QuantityHoursOfWork = enteredQuantityOfWork;
-            CreatingWork.TotalPriceOfWork = enteresCostOfWork;
-
-            int IdOfCreatingWork;
-            using (WorksDBContext dbContext = new ())
-            {
-                dbContext.Works.Add(CreatingWork);
-                dbContext.SaveChanges();
-                IdOfCreatingWork = CreatingWork.ID;
-
-            }
-
-        }
-
         private RelayCommand addWorkCommand;
         public RelayCommand AddWorkCommand
         {
@@ -102,11 +89,42 @@ namespace RenovationCalculation.ApplictionVewModel
                 return addWorkCommand ??
                     (addWorkCommand = new RelayCommand(obj =>
                     {
+                        TypeOfWorkModel CreatingWork = new();
+
                         var vm = obj as StackOfAddingWorksViewModel;
                         var nameOfWork = vm.EnteredNewWork;
+                        var SelectedWorker_vm = vm.SelectedWorker;
+                        var QuantityOfHours = vm.EnteredQuantityOfWork;
+                        var CostOfWork = vm.EnteredCostOfWork;
+
+                        CreatingWork.TypeOfWorkName = nameOfWork;
+                        CreatingWork.QuantityHoursOfWork = QuantityOfHours;
+                        CreatingWork.TotalPriceOfWork = CostOfWork;
+
+                        int IdOfCreatingWork;
+                        using (WorksDBContext dbContext = new())
+                        {
+                            dbContext.Works.Add(CreatingWork);
+                            dbContext.SaveChanges();
+                            IdOfCreatingWork = CreatingWork.ID;
+                            List<WorkerModel> workers = dbContext.Workers.ToList<WorkerModel>();
+                            WorkerModel workerUnderEdition = workers.Where(w => w.Name == SelectedWorker_vm).FirstOrDefault();
+                            workerUnderEdition.WorkId = IdOfCreatingWork;
+                            dbContext.Update(workerUnderEdition);
+                            dbContext.SaveChanges();
+                        }
+                        RefreshDataBase();
                         //nameOfWork for example, other fields can be the same way.
                         //here you can save to DB or do another work.
                     }));
+            }
+        }
+        public void RefreshDataBase()
+        {
+            using (WorksDBContext db = new WorksDBContext())
+            {
+                Workers = db.Workers.ToList();
+                typeOfWorks = db.Works.ToList();
             }
         }
     }

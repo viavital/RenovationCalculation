@@ -34,6 +34,13 @@ namespace RenovationCalculation
                        
         }
 
+        private void NameOfSelectedWorker_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            _stackOfAddingWorksViewModel.selectedWorker = NameOfSelectedWorker.SelectedItem.ToString();
+        }
+
+       
+
         //private void Button_AddWork_Click(object sender, RoutedEventArgs e)
         //{
         //    _stackOfAddingWorksViewModel.enteredNewWork = NameOfNewWorkTextBox.Text;

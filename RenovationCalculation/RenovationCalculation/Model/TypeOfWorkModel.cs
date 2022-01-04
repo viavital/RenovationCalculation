@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace RenovationCalculation.Model
 {
-    class TypeOfWorkModel
+    public class TypeOfWorkModel
     {
         public int ID { get; set; }
         public string TypeOfWorkName { get; set; }
         public int QuantityHoursOfWork { get; set; }
       //  public DateTime DateOfWork { get; set; }
         public int TotalPriceOfWork { get; set; }
-
     }
 }
