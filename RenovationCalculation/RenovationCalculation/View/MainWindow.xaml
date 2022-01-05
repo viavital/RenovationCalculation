@@ -23,7 +23,8 @@
             <StackPanel Grid.Row="0">
                 <TextBox Text="{Binding enteredNewWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam"/>
 
-                <ComboBox x:Name="NameOfSelectedWorker" FontSize="20" materialDesign:HintAssist.Hint="Select worker"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" ItemsSource="{Binding Workers}" SelectionChanged="NameOfSelectedWorker_SelectionChanged">
+                <ComboBox x:Name="NameOfSelectedWorker" FontSize="20" materialDesign:HintAssist.Hint="Select worker"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
+                          ItemsSource="{Binding Workers}" SelectionChanged="NameOfSelectedWorker_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}"/>

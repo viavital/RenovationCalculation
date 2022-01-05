@@ -25,8 +25,7 @@ namespace RenovationCalculation.ApplictionVewModel
             }
         }
         public List<WorkerModel> Workers { get; set; }
-
-        // private TypeOfWorkModel EnteredTypeOfWork;
+             
         public StackOfAddingWorksViewModel()
         {
             RefreshDataBase();
@@ -72,7 +71,6 @@ namespace RenovationCalculation.ApplictionVewModel
                 OnPropertyChanged("enteresCostOfWork");
             }
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -124,7 +122,23 @@ namespace RenovationCalculation.ApplictionVewModel
             using (WorksDBContext db = new WorksDBContext())
             {
                 Workers = db.Workers.ToList();
+                Workers.Insert(0 , new WorkerModel() { Name = "Add ..." });
+                
                 typeOfWorks = db.Works.ToList();
+            }
+        }
+        private RelayCommand addWorkerCommand;
+        public RelayCommand AddWorkerCommand
+        {
+            get
+            {
+                return addWorkerCommand ??
+                    (addWorkerCommand = new RelayCommand(obj =>
+                    {
+                        WorkerModel NewWorker = new();
+
+                       
+                    }));
             }
         }
     }
