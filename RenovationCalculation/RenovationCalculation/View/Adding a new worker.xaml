@@ -1,0 +1,34 @@
+﻿<Window x:Class="RenovationCalculation.View.Adding_a_new_worker"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RenovationCalculation.View"
+        mc:Ignorable="d"
+        Title="Adding_a_new_worker" Height="200" Width="400" MinHeight="300" MinWidth="500" SizeToContent="Width"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        WindowStartupLocation="CenterScreen"        
+        DataContext="AddingWorkerViewModel">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="70" Height="*"/>
+            <RowDefinition Height="0.35*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition MinWidth="80"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0">
+            <TextBox Text="{Binding enteredNameOfNewWorker}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new worker:" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+        </StackPanel>
+        <Button Grid.Row="1" Width="80" HorizontalAlignment="Left" FontSize="20" Margin="10,0,0,5" Cursor="Hand" Command="{Binding AddWorkerCommand}" CommandParameter="{Binding}"> Add </Button>
+        <Button Grid.Row="1" Grid.Column="1" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand"> Close </Button>
+        <ListBox Grid.Column="1" ItemsSource="{Binding }">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

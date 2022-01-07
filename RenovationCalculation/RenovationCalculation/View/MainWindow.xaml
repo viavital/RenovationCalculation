@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RenovationCalculation"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:ApplictionVewModel="clr-namespace:RenovationCalculation.ApplictionVewModel" x:Class="RenovationCalculation.MainWindow"
+        xmlns:ApplictionVewModel="clr-namespace:RenovationCalculation.ApplictionViewModel" x:Class="RenovationCalculation.MainWindow"
         mc:Ignorable="d"
-        Title="Calculation of renovating works" Height="500" Width="800" MinHeight="380" MinWidth="800">
+        Title="Calculation of renovating works" Height="500" Width="800" MinHeight="380" MinWidth="800"
+        IsEnabled="{Binding isEnabledMainWindow}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.66*"/>
@@ -24,10 +25,10 @@
                 <TextBox Text="{Binding enteredNewWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam"/>
 
                 <ComboBox x:Name="NameOfSelectedWorker" FontSize="20" materialDesign:HintAssist.Hint="Select worker"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
-                          ItemsSource="{Binding Workers}" SelectionChanged="NameOfSelectedWorker_SelectionChanged">
+                          ItemsSource="{Binding Workers}" SelectedItem="{Binding selectedWorker, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
+                            <TextBlock Text="{Binding Path=Name}"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>

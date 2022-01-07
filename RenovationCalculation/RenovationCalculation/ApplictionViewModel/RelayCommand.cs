@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RenovationCalculation.ApplictionVewModel
+namespace RenovationCalculation.ApplictionViewModel
 {
     class RelayCommand: ICommand
     {
@@ -22,6 +22,10 @@ namespace RenovationCalculation.ApplictionVewModel
         {
             this.execute = execute;
             this.canExecute = canExecute;
+        }
+
+        public RelayCommand()
+        {
         }
 
         public bool CanExecute(object parameter)

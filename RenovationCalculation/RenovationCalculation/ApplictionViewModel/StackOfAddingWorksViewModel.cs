@@ -9,11 +9,23 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Data.Entity;
 using System.Windows.Input;
+using RenovationCalculation.View;
 
-namespace RenovationCalculation.ApplictionVewModel
+namespace RenovationCalculation.ApplictionViewModel
 {
     class StackOfAddingWorksViewModel : INotifyPropertyChanged
     {
+        private bool IsEnabledMainWindow { get; set; } = true;
+        public bool isEnabledMainWindow
+        {
+            get { return IsEnabledMainWindow; }
+            set 
+            {
+                IsEnabledMainWindow = value;
+                OnPropertyChanged();
+            }
+        }
+
         public List<TypeOfWorkModel> TypeOfWorks { get; set; }
         public List<TypeOfWorkModel> typeOfWorks
         {
@@ -25,7 +37,18 @@ namespace RenovationCalculation.ApplictionVewModel
             }
         }
         public List<WorkerModel> Workers { get; set; }
-             
+
+        private event Action AddNewWorkerEvent;
+        WorkerModel AddWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
+        public void RefreshDataBase()
+        {
+            using (WorksDBContext db = new WorksDBContext())
+            {
+                Workers = db.Workers.ToList();
+                Workers.Insert(0, AddWorkerMenuSelection);
+                typeOfWorks = db.Works.ToList();
+            }
+        }
         public StackOfAddingWorksViewModel()
         {
             RefreshDataBase();
@@ -49,8 +72,23 @@ namespace RenovationCalculation.ApplictionVewModel
             {
                 SelectedWorker = value;
                 OnPropertyChanged();
+                if (value == AddWorkerMenuSelection.Name) // opening window of adding new worker
+                {
+                    AddNewWorkerEvent += AddNewWorkerEventHandler;
+                    AddNewWorkerEvent();
+                    AddNewWorkerEvent -= AddNewWorkerEventHandler;
+                }
             }
         }
+        private void AddNewWorkerEventHandler()
+        {
+            {
+                isEnabledMainWindow = false;
+                Adding_a_new_worker adding_A_New_Worker = new();
+                adding_A_New_Worker.Show();
+            }
+        }
+
         private int EnteredQuantityOfWork;
         public int enteredQuantityOfWork
         {
@@ -114,30 +152,6 @@ namespace RenovationCalculation.ApplictionVewModel
                         RefreshDataBase();
                         //nameOfWork for example, other fields can be the same way.
                         //here you can save to DB or do another work.
-                    }));
-            }
-        }
-        public void RefreshDataBase()
-        {
-            using (WorksDBContext db = new WorksDBContext())
-            {
-                Workers = db.Workers.ToList();
-                Workers.Insert(0 , new WorkerModel() { Name = "Add ..." });
-                
-                typeOfWorks = db.Works.ToList();
-            }
-        }
-        private RelayCommand addWorkerCommand;
-        public RelayCommand AddWorkerCommand
-        {
-            get
-            {
-                return addWorkerCommand ??
-                    (addWorkerCommand = new RelayCommand(obj =>
-                    {
-                        WorkerModel NewWorker = new();
-
-                       
                     }));
             }
         }

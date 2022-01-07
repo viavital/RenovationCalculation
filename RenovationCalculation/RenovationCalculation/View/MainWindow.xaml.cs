@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using RenovationCalculation.Model;
 using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
-using RenovationCalculation.ApplictionVewModel;
+using RenovationCalculation.ApplictionViewModel;
 
 namespace RenovationCalculation
 {
@@ -27,17 +27,8 @@ namespace RenovationCalculation
         readonly StackOfAddingWorksViewModel _stackOfAddingWorksViewModel = new();
         public MainWindow()
         {
-            InitializeComponent();
             DataContext = _stackOfAddingWorksViewModel;
-
-           // Binding binding = new Binding();
-                       
+            InitializeComponent();            
         }
-
-        private void NameOfSelectedWorker_SelectionChanged(object sender, RoutedEventArgs e)
-        {
-           _stackOfAddingWorksViewModel.selectedWorker = NameOfSelectedWorker.SelectedItem.ToString();
-        }
-       
     }
 }
