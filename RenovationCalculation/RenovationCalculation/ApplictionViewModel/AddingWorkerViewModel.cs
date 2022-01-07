@@ -10,19 +10,17 @@ using RenovationCalculation.Model;
 namespace RenovationCalculation.ApplictionViewModel
 {
     class AddingWorkerViewModel : INotifyPropertyChanged
-
     {
         private string EnteredNameOfNewWorker;
-
         public string enteredNameOfNewWorker
         {
             get { return EnteredNameOfNewWorker; }
             set
-            { 
+            {
                 EnteredNameOfNewWorker = value;
                 OnPropertyChanged();
             }
-        }
+        }      
 
         private RelayCommand AddWorkerCommand;
         public RelayCommand addWorkerCommand
@@ -35,15 +33,16 @@ namespace RenovationCalculation.ApplictionViewModel
                         WorkerModel CreatingWorker = new();
 
                         var vmAddNewWorker = obj as AddingWorkerViewModel;
-                        var nameOfWorker = vmAddNewWorker.EnteredNameOfNewWorker;                      
+                        var nameOfWorker = vmAddNewWorker.EnteredNameOfNewWorker;
 
-                        CreatingWorker.Name = nameOfWorker;    
-                        
+                        CreatingWorker.Name = nameOfWorker;
+
                         using (WorksDBContext dbContext = new())
                         {
                             dbContext.Workers.Add(CreatingWorker);
                             dbContext.SaveChanges();
-                        }                             
+                        }
+                        enteredNameOfNewWorker = null;
                     }));
             }
         }

@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:RenovationCalculation.View"
         mc:Ignorable="d"
         Title="Adding_a_new_worker" Height="200" Width="400" MinHeight="300" MinWidth="500" SizeToContent="Width"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:applictionviewmodel="clr-namespace:RenovationCalculation.ApplictionViewModel" 
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:applictionviewmodel="clr-namespace:RenovationCalculation.ApplictionViewModel" 
         WindowStartupLocation="CenterScreen"        
         >
     <Grid>
@@ -15,18 +16,20 @@
             <RowDefinition Height="0.35*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition MinWidth="80"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" MinWidth="80"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0">
             <TextBox Text="{Binding enteredNameOfNewWorker, UpdateSourceTrigger=PropertyChanged}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new worker:" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
         </StackPanel>
         <Button Grid.Row="1" Width="80" HorizontalAlignment="Left" FontSize="20" Margin="10,0,0,5" Cursor="Hand" Command="{Binding addWorkerCommand}" CommandParameter="{Binding}"> Add </Button>
-        <Button Grid.Row="1" Grid.Column="1" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand"> Close </Button>
-        <ListBox Grid.Column="1" ItemsSource="{Binding }">
+        <Button Grid.Row="1" Grid.Column="2" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand"> Close </Button>
+        <GridSplitter Grid.Column="1" Width="3"/>
+        <ListBox x:Name="ListBoxOfWorkers" SelectedItem="{Binding selectedWorker}" Grid.Column="2"  ItemsSource="{Binding Workers}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    
+                    <TextBlock  FontSize="20"  TextAlignment="Right" Text="{Binding Name}" LineHeight="Auto"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

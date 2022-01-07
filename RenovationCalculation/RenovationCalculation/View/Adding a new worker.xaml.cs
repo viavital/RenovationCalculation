@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+
 namespace RenovationCalculation.View
 {
     /// <summary>
@@ -21,10 +22,13 @@ namespace RenovationCalculation.View
     public partial class Adding_a_new_worker : Window
     {
         private readonly AddingWorkerViewModel addingWorkerViewModel = new();
+        private readonly StackOfAddingWorksViewModel _stackOfAddingWorksViewModelInAddingWorkers = new(); // for output workers database
         public Adding_a_new_worker()
         {
             this.DataContext = addingWorkerViewModel;
-            InitializeComponent();            
+            _stackOfAddingWorksViewModelInAddingWorkers.Workers.Remove(_stackOfAddingWorksViewModelInAddingWorkers.AddWorkerMenuSelection);
+            InitializeComponent();
+            ListBoxOfWorkers.DataContext = _stackOfAddingWorksViewModelInAddingWorkers;
         }
     }
 }

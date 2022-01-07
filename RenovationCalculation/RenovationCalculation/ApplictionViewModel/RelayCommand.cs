@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace RenovationCalculation.ApplictionViewModel
 {
-    class RelayCommand: ICommand
+    class RelayCommand : ICommand
     {
         private Action<object> execute;
         private Func<object, bool> canExecute;

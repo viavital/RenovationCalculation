@@ -28,7 +28,7 @@ namespace RenovationCalculation
         public MainWindow()
         {
             DataContext = _stackOfAddingWorksViewModel;
-            InitializeComponent();            
+            InitializeComponent();
         }
     }
 }

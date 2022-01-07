@@ -19,7 +19,7 @@ namespace RenovationCalculation.ApplictionViewModel
         public bool isEnabledMainWindow
         {
             get { return IsEnabledMainWindow; }
-            set 
+            set
             {
                 IsEnabledMainWindow = value;
                 OnPropertyChanged();
@@ -36,21 +36,20 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
-        public List<WorkerModel> Workers { get; set; }
-
+        public List<WorkerModel> Workers { get; set; } = new List<WorkerModel>();
         private event Action AddNewWorkerEvent;
-        WorkerModel AddWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
+        public  WorkerModel AddWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
         public void RefreshDataBase()
         {
             using (WorksDBContext db = new WorksDBContext())
             {
-                Workers = db.Workers.ToList();
-                Workers.Insert(0, AddWorkerMenuSelection);
+                Workers.AddRange( db.Workers.ToList());
                 typeOfWorks = db.Works.ToList();
             }
         }
         public StackOfAddingWorksViewModel()
         {
+            Workers.Insert(0, AddWorkerMenuSelection);
             RefreshDataBase();
         }
 
