@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RenovationCalculation.ApplictionViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,11 @@ namespace RenovationCalculation.View
     /// </summary>
     public partial class Adding_a_new_worker : Window
     {
+        private readonly AddingWorkerViewModel addingWorkerViewModel = new();
         public Adding_a_new_worker()
         {
-            InitializeComponent();
+            this.DataContext = addingWorkerViewModel;
+            InitializeComponent();            
         }
     }
 }

@@ -37,21 +37,16 @@ namespace RenovationCalculation.ApplictionViewModel
                         var vmAddNewWorker = obj as AddingWorkerViewModel;
                         var nameOfWorker = vmAddNewWorker.EnteredNameOfNewWorker;                      
 
-                        CreatingWorker.Name = nameOfWorker;                        
-
-                        int IdOfCreatingWorker;
+                        CreatingWorker.Name = nameOfWorker;    
+                        
                         using (WorksDBContext dbContext = new())
                         {
                             dbContext.Workers.Add(CreatingWorker);
                             dbContext.SaveChanges();
-                        }     
-                        
+                        }                             
                     }));
             }
         }
-
-
-
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
