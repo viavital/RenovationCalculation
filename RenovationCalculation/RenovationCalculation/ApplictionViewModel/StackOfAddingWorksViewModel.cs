@@ -25,9 +25,8 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
-
         public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; set; } = new ObservableCollection<TypeOfWorkModel>();
-       
+
         private ObservableCollection<WorkerModel> Workers { get; set; } = new ObservableCollection<WorkerModel>();
         public ObservableCollection<WorkerModel> workers
         {
@@ -37,17 +36,16 @@ namespace RenovationCalculation.ApplictionViewModel
                 Workers = value;
                 OnPropertyChanged();
             }
-        }        
-
-        private event Action AddNewWorkerEvent;
-        public WorkerModel AddWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
-
+        }
         public StackOfAddingWorksViewModel()
         {
             RefreshingDataBaseModel refreshingDataBaseModel = new();
-            refreshingDataBaseModel.RefreshDataBase( workers, TypeOfWorks);
+            refreshingDataBaseModel.RefreshDataBase(workers, TypeOfWorks);
             workers.Insert(0, AddWorkerMenuSelection);
         }
+
+        public event Action AddNewWorkerEvent;
+        public WorkerModel AddWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
 
         private string EnteredNewWork;
         public string enteredNewWork
@@ -69,18 +67,8 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
                 if (value == AddWorkerMenuSelection.Name) // opening window of adding new worker
                 {
-                    AddNewWorkerEvent += AddNewWorkerEventHandler;
-                    AddNewWorkerEvent();
-                    AddNewWorkerEvent -= AddNewWorkerEventHandler;
+                    AddNewWorkerEvent?.Invoke();
                 }
-            }
-        }
-        private void AddNewWorkerEventHandler()
-        {
-            {
-                isEnabledMainWindow = false;
-                Adding_a_new_worker adding_A_New_Worker = new();
-                adding_A_New_Worker.Show();
             }
         }
 
@@ -149,7 +137,7 @@ namespace RenovationCalculation.ApplictionViewModel
                         enteredNewWork = null;
                         enteredQuantityOfWork = 0;
                         enteredCostOfWork = 0;
-                        workers.Insert(0,AddWorkerMenuSelection);
+                        workers.Insert(0, AddWorkerMenuSelection);
                         //nameOfWork for example, other fields can be the same way.
                         //here you can save to DB or do another work.
                     }));

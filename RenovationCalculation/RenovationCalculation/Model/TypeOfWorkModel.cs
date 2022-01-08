@@ -15,8 +15,8 @@ namespace RenovationCalculation.Model
         public string typeOfWorkName
         {
             get { return TypeOfWorkName; }
-            set 
-            { 
+            set
+            {
                 TypeOfWorkName = value;
                 OnPropertyChanged();
             }

@@ -21,13 +21,19 @@ namespace RenovationCalculation.View
     /// </summary>
     public partial class Adding_a_new_worker : Window
     {
-        private readonly AddingWorkerViewModel addingWorkerViewModel = new();
+        private AddingWorkerViewModel addingWorkerViewModel = new();
 
         public Adding_a_new_worker()
         {
             this.DataContext = addingWorkerViewModel;
             InitializeComponent();
+            addingWorkerViewModel.CloseAddWorkerWindowEvent += CloseAddWorkerWindowHandler;
+        }
 
+        private void CloseAddWorkerWindowHandler()
+        {
+            this.Close();
+            addingWorkerViewModel.CloseAddWorkerWindowEvent -= CloseAddWorkerWindowHandler;
         }
     }
 }

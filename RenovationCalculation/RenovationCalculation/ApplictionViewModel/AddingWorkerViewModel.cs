@@ -56,11 +56,11 @@ namespace RenovationCalculation.ApplictionViewModel
                         using (WorksDBContext dbContext = new())
                         {
                             dbContext.Workers.Add(CreatingWorker);
-                            dbContext.SaveChanges();                            
+                            dbContext.SaveChanges();
                         }
                         RefreshingDataBaseModel refreshingDataBaseModel = new();
                         refreshingDataBaseModel.RefreshDataBase(workersInAddingWorkerVM);
-                      enteredNameOfNewWorker = null;
+                        enteredNameOfNewWorker = null;
                     }));
             }
         }
@@ -82,6 +82,20 @@ namespace RenovationCalculation.ApplictionViewModel
                                 dbContext.SaveChanges();
                             }
                         }
+                    }
+                    ));
+            }
+        }
+        public event Action CloseAddWorkerWindowEvent;
+        private RelayCommand CloseWindowCommand;
+        public RelayCommand closeWindowCommand
+        {
+            get
+            {
+                return CloseWindowCommand ??
+                    (CloseWindowCommand = new RelayCommand(obj =>
+                    {
+                        CloseAddWorkerWindowEvent();
                     }
                     ));
             }

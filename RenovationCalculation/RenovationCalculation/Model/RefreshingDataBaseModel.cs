@@ -15,7 +15,7 @@ namespace RenovationCalculation.Model
             {
                 ListOfWorkers.Clear();
                 ListOfworks.Clear();
-                
+
                 foreach (var item in (db.Workers.ToList())) // addrenge is not avaliable
                 {
                     ListOfWorkers.Add(item);
@@ -23,7 +23,7 @@ namespace RenovationCalculation.Model
                 foreach (var item in (db.Works.ToList()))
                 {
                     ListOfworks.Add(item);
-                }                
+                }
             }
         }
         public void RefreshDataBase(ObservableCollection<WorkerModel> ListOfWorkers)
