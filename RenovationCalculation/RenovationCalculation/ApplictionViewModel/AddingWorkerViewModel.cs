@@ -11,6 +11,7 @@ namespace RenovationCalculation.ApplictionViewModel
 {
     class AddingWorkerViewModel : INotifyPropertyChanged
     {
+        public event Action ToUpdateDataOfWorkers;
         private string EnteredNameOfNewWorker;
         public string enteredNameOfNewWorker
         {
@@ -40,10 +41,33 @@ namespace RenovationCalculation.ApplictionViewModel
                         using (WorksDBContext dbContext = new())
                         {
                             dbContext.Workers.Add(CreatingWorker);
-                            dbContext.SaveChanges();
+                            dbContext.SaveChanges();                            
                         }
-                        enteredNameOfNewWorker = null;
+                        ToUpdateDataOfWorkers();
+                      enteredNameOfNewWorker = null;
                     }));
+            }
+        }
+
+        private RelayCommand RemoveWorkerCommand;
+        public RelayCommand removeWorkerCommand
+        {
+            get
+            {
+                return RemoveWorkerCommand ??
+                    (RemoveWorkerCommand = new RelayCommand(obj =>
+                    {
+                        WorkerModel workerToRemove = obj as WorkerModel;
+                        if (workerToRemove != null)
+                        {
+                            using (WorksDBContext dbContext = new())
+                            {
+                                dbContext.Workers.Remove(workerToRemove);
+                                dbContext.SaveChanges();
+                            }
+                        }
+                    }
+                    ));
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;

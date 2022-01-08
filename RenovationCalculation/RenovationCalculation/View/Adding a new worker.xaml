@@ -24,9 +24,10 @@
             <TextBox Text="{Binding enteredNameOfNewWorker, UpdateSourceTrigger=PropertyChanged}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new worker:" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
         </StackPanel>
         <Button Grid.Row="1" Width="80" HorizontalAlignment="Left" FontSize="20" Margin="10,0,0,5" Cursor="Hand" Command="{Binding addWorkerCommand}" CommandParameter="{Binding}"> Add </Button>
+        <Button Grid.Row="1" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand" Command="{Binding removeWorkerCommand}" CommandParameter="{Binding selectedWorker}">Delete</Button>
         <Button Grid.Row="1" Grid.Column="2" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand"> Close </Button>
         <GridSplitter Grid.Column="1" Width="3"/>
-        <ListBox x:Name="ListBoxOfWorkers" SelectedItem="{Binding selectedWorker}" Grid.Column="2"  ItemsSource="{Binding Workers}">
+        <ListBox x:Name="ListBoxOfWorkers" SelectedItem="{Binding selectedWorker, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2"  ItemsSource="{Binding Workers, UpdateSourceTrigger=PropertyChanged}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock  FontSize="20"  TextAlignment="Right" Text="{Binding Name}" LineHeight="Auto"/>

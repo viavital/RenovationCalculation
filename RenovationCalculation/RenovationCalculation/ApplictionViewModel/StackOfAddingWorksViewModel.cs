@@ -24,7 +24,7 @@ namespace RenovationCalculation.ApplictionViewModel
                 IsEnabledMainWindow = value;
                 OnPropertyChanged();
             }
-        }
+        }      
 
         public List<TypeOfWorkModel> TypeOfWorks { get; set; }
         public List<TypeOfWorkModel> typeOfWorks
@@ -36,7 +36,16 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
-        public List<WorkerModel> Workers { get; set; } = new List<WorkerModel>();
+        private List<WorkerModel> workers { get; set; } = new List<WorkerModel>();
+        public List<WorkerModel> Workers
+        {
+            get { return workers; }
+            set
+            {
+                workers = value;
+                OnPropertyChanged();
+            }
+        }
         private event Action AddNewWorkerEvent;
         public  WorkerModel AddWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
         public void RefreshDataBase()
