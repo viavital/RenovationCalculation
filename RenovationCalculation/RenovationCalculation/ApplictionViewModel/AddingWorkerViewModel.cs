@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -11,7 +12,11 @@ namespace RenovationCalculation.ApplictionViewModel
 {
     class AddingWorkerViewModel : INotifyPropertyChanged
     {
-        public event Action ToUpdateDataOfWorkers;
+        public AddingWorkerViewModel()
+        {
+            RefreshingDataBaseModel refreshingDataBaseModel = new();
+            refreshingDataBaseModel.RefreshDataBase(workersInAddingWorkerVM);
+        }
         private string EnteredNameOfNewWorker;
         public string enteredNameOfNewWorker
         {
@@ -21,7 +26,17 @@ namespace RenovationCalculation.ApplictionViewModel
                 EnteredNameOfNewWorker = value;
                 OnPropertyChanged();
             }
-        }      
+        }
+        private ObservableCollection<WorkerModel> WorkersInAddingWorkerVM { get; set; } = new ObservableCollection<WorkerModel>();
+        public ObservableCollection<WorkerModel> workersInAddingWorkerVM
+        {
+            get { return WorkersInAddingWorkerVM; }
+            set
+            {
+                WorkersInAddingWorkerVM = value;
+                OnPropertyChanged();
+            }
+        }
 
         private RelayCommand AddWorkerCommand;
         public RelayCommand addWorkerCommand
@@ -43,7 +58,8 @@ namespace RenovationCalculation.ApplictionViewModel
                             dbContext.Workers.Add(CreatingWorker);
                             dbContext.SaveChanges();                            
                         }
-                        ToUpdateDataOfWorkers();
+                        RefreshingDataBaseModel refreshingDataBaseModel = new();
+                        refreshingDataBaseModel.RefreshDataBase(workersInAddingWorkerVM);
                       enteredNameOfNewWorker = null;
                     }));
             }

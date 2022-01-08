@@ -27,7 +27,7 @@
         <Button Grid.Row="1" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand" Command="{Binding removeWorkerCommand}" CommandParameter="{Binding selectedWorker}">Delete</Button>
         <Button Grid.Row="1" Grid.Column="2" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand"> Close </Button>
         <GridSplitter Grid.Column="1" Width="3"/>
-        <ListBox x:Name="ListBoxOfWorkers" SelectedItem="{Binding selectedWorker, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2"  ItemsSource="{Binding Workers, UpdateSourceTrigger=PropertyChanged}">
+        <ListBox x:Name="ListBoxOfWorkers" SelectedItem="{Binding selectedWorker, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2"  ItemsSource="{Binding workersInAddingWorkerVM}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock  FontSize="20"  TextAlignment="Right" Text="{Binding Name}" LineHeight="Auto"/>

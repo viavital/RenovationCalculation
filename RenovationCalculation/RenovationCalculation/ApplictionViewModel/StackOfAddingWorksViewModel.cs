@@ -24,42 +24,29 @@ namespace RenovationCalculation.ApplictionViewModel
                 IsEnabledMainWindow = value;
                 OnPropertyChanged();
             }
-        }      
+        }
 
-        public List<TypeOfWorkModel> TypeOfWorks { get; set; }
-        public List<TypeOfWorkModel> typeOfWorks
+        public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; set; } = new ObservableCollection<TypeOfWorkModel>();
+       
+        private ObservableCollection<WorkerModel> Workers { get; set; } = new ObservableCollection<WorkerModel>();
+        public ObservableCollection<WorkerModel> workers
         {
-            get { return TypeOfWorks; }
+            get { return Workers; }
             set
             {
-                TypeOfWorks = value;
+                Workers = value;
                 OnPropertyChanged();
             }
-        }
-        private List<WorkerModel> workers { get; set; } = new List<WorkerModel>();
-        public List<WorkerModel> Workers
-        {
-            get { return workers; }
-            set
-            {
-                workers = value;
-                OnPropertyChanged();
-            }
-        }
+        }        
+
         private event Action AddNewWorkerEvent;
-        public  WorkerModel AddWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
-        public void RefreshDataBase()
-        {
-            using (WorksDBContext db = new WorksDBContext())
-            {
-                Workers.AddRange( db.Workers.ToList());
-                typeOfWorks = db.Works.ToList();
-            }
-        }
+        public WorkerModel AddWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
+
         public StackOfAddingWorksViewModel()
         {
-            Workers.Insert(0, AddWorkerMenuSelection);
-            RefreshDataBase();
+            RefreshingDataBaseModel refreshingDataBaseModel = new();
+            refreshingDataBaseModel.RefreshDataBase( workers, TypeOfWorks);
+            workers.Insert(0, AddWorkerMenuSelection);
         }
 
         private string EnteredNewWork;
@@ -114,7 +101,7 @@ namespace RenovationCalculation.ApplictionViewModel
             set
             {
                 EnteredCostOfWork = value;
-                OnPropertyChanged("enteresCostOfWork");
+                OnPropertyChanged("");
             }
         }
 
@@ -141,9 +128,9 @@ namespace RenovationCalculation.ApplictionViewModel
                         var QuantityOfHours = vm.EnteredQuantityOfWork;
                         var CostOfWork = vm.EnteredCostOfWork;
 
-                        CreatingWork.TypeOfWorkName = nameOfWork;
-                        CreatingWork.QuantityHoursOfWork = QuantityOfHours;
-                        CreatingWork.TotalPriceOfWork = CostOfWork;
+                        CreatingWork.typeOfWorkName = nameOfWork;
+                        CreatingWork.quantityHoursOfWork = QuantityOfHours;
+                        CreatingWork.totalPriceOfWork = CostOfWork;
 
                         int IdOfCreatingWork;
                         using (WorksDBContext dbContext = new())
@@ -157,7 +144,12 @@ namespace RenovationCalculation.ApplictionViewModel
                             dbContext.Update(workerUnderEdition);
                             dbContext.SaveChanges();
                         }
-                        RefreshDataBase();
+                        RefreshingDataBaseModel refreshingDataBaseModel = new RefreshingDataBaseModel();
+                        refreshingDataBaseModel.RefreshDataBase(workers, TypeOfWorks);
+                        enteredNewWork = null;
+                        enteredQuantityOfWork = 0;
+                        enteredCostOfWork = 0;
+                        workers.Insert(0,AddWorkerMenuSelection);
                         //nameOfWork for example, other fields can be the same way.
                         //here you can save to DB or do another work.
                     }));

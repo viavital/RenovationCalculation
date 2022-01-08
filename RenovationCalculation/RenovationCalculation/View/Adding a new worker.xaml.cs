@@ -22,21 +22,12 @@ namespace RenovationCalculation.View
     public partial class Adding_a_new_worker : Window
     {
         private readonly AddingWorkerViewModel addingWorkerViewModel = new();
-        private readonly StackOfAddingWorksViewModel _stackOfAddingWorksViewModelInAddingWorkers = new(); // for output workers database
-        
+
         public Adding_a_new_worker()
         {
             this.DataContext = addingWorkerViewModel;
-            _stackOfAddingWorksViewModelInAddingWorkers.Workers.Remove(_stackOfAddingWorksViewModelInAddingWorkers.AddWorkerMenuSelection);
-            addingWorkerViewModel.ToUpdateDataOfWorkers += Adding_a_new_worker_ToUpdateDataOfWorkers;
             InitializeComponent();
-            ListBoxOfWorkers.DataContext = _stackOfAddingWorksViewModelInAddingWorkers;
-            
-        }
 
-        private void Adding_a_new_worker_ToUpdateDataOfWorkers()
-        {
-            _stackOfAddingWorksViewModelInAddingWorkers.RefreshDataBase();
         }
     }
 }
