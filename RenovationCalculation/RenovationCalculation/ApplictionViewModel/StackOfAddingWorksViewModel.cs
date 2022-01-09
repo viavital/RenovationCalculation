@@ -19,6 +19,7 @@ namespace RenovationCalculation.ApplictionViewModel
         //v: викосив IsEnabledMainWindow - виглядало як костиль, без нього зараз наче норм працює
 
         private readonly WindowNavService _windowNavService;
+        private readonly SomeModel _someModel;
 
         //v: прибрав звідси set
         public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; } = new ObservableCollection<TypeOfWorkModel>();
@@ -44,6 +45,14 @@ namespace RenovationCalculation.ApplictionViewModel
             RefreshingDataBaseModel refreshingDataBaseModel = new();
             refreshingDataBaseModel.RefreshDataBase(workers, TypeOfWorks);
             workers.Insert(0, _addWorkerMenuSelection);
+            _someModel = new SomeModel();
+            _someModel.PropertyChanged += OnSomeChanged;
+        }
+
+        private void OnSomeChanged(object sender, PropertyChangedEventArgs e)
+        {
+            //todo here you can TypeOfWorks.Add(..... 
+            Console.WriteLine("OnSomeChanged!!!!");
         }
 
         //v: видалив public event Action AddNewWorkerEvent; з цієї вьюмодельки нам немає кому кидати екшини
@@ -114,6 +123,9 @@ namespace RenovationCalculation.ApplictionViewModel
                     //v: тут можна параметр не використовувати взагалі, так як ти знаходишся в цій вью моделі де потрібні якісь зміни.
                     (addWorkCommand = new RelayCommand(_ =>
                     {
+                        //todo this line for test only:
+                        _someModel.AddString("ATATA!!");
+
                         TypeOfWorkModel CreatingWork = new();
 
                         CreatingWork.typeOfWorkName = EnteredNewWork;
