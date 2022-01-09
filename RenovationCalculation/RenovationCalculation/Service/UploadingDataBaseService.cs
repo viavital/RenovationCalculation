@@ -39,6 +39,8 @@ namespace RenovationCalculation.Model
         {
             using (WorksDBContext db = new WorksDBContext())
             {
+                typeOfWorks.Clear();
+                listOfWorkers.Clear();
                 foreach (var item in (db.Workers.ToList())) // addrenge is not avaliable
                 {
                     listOfWorkers.Add(item);

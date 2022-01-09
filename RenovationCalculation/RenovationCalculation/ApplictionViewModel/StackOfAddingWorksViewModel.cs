@@ -141,6 +141,7 @@ namespace RenovationCalculation.ApplictionViewModel
                             dbContext.Update(workerUnderEdition);
                             dbContext.SaveChanges();
                         }
+                        _uploadingDataBaseService.RefreshDataBase();
                         //v: те саме по цій рефрешінг модел, тут її викосиш.
                         
                         enteredNewWork = null;
