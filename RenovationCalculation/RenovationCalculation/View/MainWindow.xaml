@@ -24,7 +24,7 @@
                 <TextBox Text="{Binding enteredNewWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam"/>
 
                 <ComboBox FontSize="20" materialDesign:HintAssist.Hint="Select worker"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
-                          ItemsSource="{Binding workers}" SelectedItem="{Binding selectedWorker, UpdateSourceTrigger=PropertyChanged}">
+                          ItemsSource="{Binding listOfWorkers}" SelectedItem="{Binding selectedWorker, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Name}"/>

@@ -16,36 +16,44 @@ namespace RenovationCalculation.ApplictionViewModel
 {
     class StackOfAddingWorksViewModel : INotifyPropertyChanged
     {
-        //v: викосив IsEnabledMainWindow - виглядало як костиль, без нього зараз наче норм працює
-
+        
         private readonly WindowNavService _windowNavService;
+        private readonly UploadingDataBaseService _uploadingDataBaseService;
 
-        //v: прибрав звідси set
-        public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; } = new ObservableCollection<TypeOfWorkModel>();
+        
+        public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; set; } = new ObservableCollection<TypeOfWorkModel>();
 
         //v: get set на приватних полях не пишемо
-        private ObservableCollection<WorkerModel> Workers = new ObservableCollection<WorkerModel>();
-        public ObservableCollection<WorkerModel> workers
+        private ObservableCollection<WorkerModel> ListOfWorkers = new ObservableCollection<WorkerModel>();
+        public ObservableCollection<WorkerModel> listOfWorkers
         {
-            get { return Workers; }
+            get { return ListOfWorkers; }
             set
             {
-                Workers = value;
+                ListOfWorkers = value;
                 OnPropertyChanged();
             }
         }
         public StackOfAddingWorksViewModel()
-        {
-            _windowNavService = new();
+        {            
+            _windowNavService = new();            
+            _uploadingDataBaseService = new();
+            _uploadingDataBaseService.RefreshedDatbaseEvent += RefreshedDataBaseEventHandler;
+            _uploadingDataBaseService.RefreshDataBase();  // викликаємо 1-й раз для початкової загрузки бази         
+        
             //v: такого підходу з RefreshingDataBaseModel треба позбутись. Ти її створюєш викликаєш метод в який передаєш свої лісти і потім викидаєш цю рефрешінг модел.
             // в тебе має бути джерело даних - модель, чи сторедж, де буде завжди актуальна інформація. Якщо хтось в неї щось дописав, твої лісти тут мають слухати ці хміни і автоматично актуалізуватись.
             // щоб не виникало ситуації коли в базі одні данні а на екрані інші
             // ось наприклад як ти почав робити TypeOfWorkModel яка є INotifyPropertyChanged і може сповіщати слухачів про зміни полів, так само і тут перероби.
-            RefreshingDataBaseModel refreshingDataBaseModel = new();
-            refreshingDataBaseModel.RefreshDataBase(workers, TypeOfWorks);
-            workers.Insert(0, _addWorkerMenuSelection);
-        }
 
+            ListOfWorkers.Insert(0, _addWorkerMenuSelection);
+        }
+        private void RefreshedDataBaseEventHandler()
+        {
+            TypeOfWorks = _uploadingDataBaseService.typeOfWorks;
+            listOfWorkers = _uploadingDataBaseService.listOfWorkers;
+        }
+       
         //v: видалив public event Action AddNewWorkerEvent; з цієї вьюмодельки нам немає кому кидати екшини
         private readonly WorkerModel _addWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
 
@@ -134,12 +142,11 @@ namespace RenovationCalculation.ApplictionViewModel
                             dbContext.SaveChanges();
                         }
                         //v: те саме по цій рефрешінг модел, тут її викосиш.
-                        RefreshingDataBaseModel refreshingDataBaseModel = new RefreshingDataBaseModel();
-                        refreshingDataBaseModel.RefreshDataBase(workers, TypeOfWorks);
+                        
                         enteredNewWork = null;
                         enteredQuantityOfWork = 0;
                         enteredCostOfWork = 0;
-                        workers.Insert(0, _addWorkerMenuSelection);
+                        listOfWorkers.Insert(0, _addWorkerMenuSelection);
                     }));
             }
         }

@@ -14,8 +14,7 @@ namespace RenovationCalculation.ApplictionViewModel
     {
         public AddingWorkerViewModel()
         {
-            RefreshingDataBaseModel refreshingDataBaseModel = new();
-            refreshingDataBaseModel.RefreshDataBase(workersInAddingWorkerVM);
+            
         }
         private string EnteredNameOfNewWorker;
         public string enteredNameOfNewWorker
@@ -57,9 +56,7 @@ namespace RenovationCalculation.ApplictionViewModel
                         {
                             dbContext.Workers.Add(CreatingWorker);
                             dbContext.SaveChanges();
-                        }
-                        RefreshingDataBaseModel refreshingDataBaseModel = new();
-                        refreshingDataBaseModel.RefreshDataBase(workersInAddingWorkerVM);
+                        }                       
                         enteredNameOfNewWorker = null;
                     }));
             }
