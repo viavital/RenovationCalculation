@@ -39,7 +39,7 @@ namespace RenovationCalculation.ApplictionViewModel
             _windowNavService = new();            
             _uploadingDataBaseService = new();
             _uploadingDataBaseService.RefreshedDatbaseEvent += RefreshedDataBaseEventHandler;
-            _uploadingDataBaseService.RefreshDataBase();  // викликаємо 1-й раз для початкової загрузки бази         
+            _uploadingDataBaseService.RefreshDataBase();  // викликаємо 1-й раз для початкової загрузки        
         
             //v: такого підходу з RefreshingDataBaseModel треба позбутись. Ти її створюєш викликаєш метод в який передаєш свої лісти і потім викидаєш цю рефрешінг модел.
             // в тебе має бути джерело даних - модель, чи сторедж, де буде завжди актуальна інформація. Якщо хтось в неї щось дописав, твої лісти тут мають слухати ці хміни і автоматично актуалізуватись.
