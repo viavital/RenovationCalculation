@@ -47,14 +47,13 @@ namespace RenovationCalculation.ApplictionViewModel
             refreshingDataBaseModel.RefreshDataBase(workers, TypeOfWorks);
             workers.Insert(0, _addWorkerMenuSelection);
             _someModel = new SomeModel();
-            _someModel.SomeStrings.CollectionChanged += OnSomeStrChanged;
+            _someModel.OnElementAdded += OnElementAdded;
         }
 
-        private void OnSomeStrChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnElementAdded(string elem)
         {
             //todo here you can add element to collection....
-            var newItem = e.NewItems[0];
-            Console.WriteLine(newItem);
+            Console.WriteLine(elem);
         }
 
         //v: видалив public event Action AddNewWorkerEvent; з цієї вьюмодельки нам немає кому кидати екшини
