@@ -19,7 +19,6 @@ namespace RenovationCalculation.ApplictionViewModel
         
         private readonly WindowNavService _windowNavService;
         private readonly UploadingDataBaseService _uploadingDataBaseService;
-
         
         public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; set; } = new ObservableCollection<TypeOfWorkModel>();
 
@@ -38,8 +37,10 @@ namespace RenovationCalculation.ApplictionViewModel
         {            
             _windowNavService = new();            
             _uploadingDataBaseService = new();
-            _uploadingDataBaseService.RefreshedDatbaseEvent += RefreshedDataBaseEventHandler;
-            _uploadingDataBaseService.RefreshDataBase();  // викликаємо 1-й раз для початкової загрузки        
+            _uploadingDataBaseService.PropertyChanged += _uploadingDataBaseService_PropertyChanged;
+            _uploadingDataBaseService.UploadDataBase();
+            TypeOfWorks = _uploadingDataBaseService.typeOfWorks;
+            listOfWorkers = _uploadingDataBaseService.listOfWorkers;
         
             //v: такого підходу з RefreshingDataBaseModel треба позбутись. Ти її створюєш викликаєш метод в який передаєш свої лісти і потім викидаєш цю рефрешінг модел.
             // в тебе має бути джерело даних - модель, чи сторедж, де буде завжди актуальна інформація. Якщо хтось в неї щось дописав, твої лісти тут мають слухати ці хміни і автоматично актуалізуватись.
@@ -48,10 +49,10 @@ namespace RenovationCalculation.ApplictionViewModel
 
             ListOfWorkers.Insert(0, _addWorkerMenuSelection);
         }
-        private void RefreshedDataBaseEventHandler()
+
+        private void _uploadingDataBaseService_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            TypeOfWorks = _uploadingDataBaseService.typeOfWorks;
-            listOfWorkers = _uploadingDataBaseService.listOfWorkers;
+            
         }
        
         //v: видалив public event Action AddNewWorkerEvent; з цієї вьюмодельки нам немає кому кидати екшини
@@ -128,20 +129,21 @@ namespace RenovationCalculation.ApplictionViewModel
                         CreatingWork.quantityHoursOfWork = EnteredQuantityOfWork;
                         CreatingWork.totalPriceOfWork = EnteredCostOfWork;
 
+                        _uploadingDataBaseService.AddWorks(CreatingWork);
                         //v: хотілось би якось цю логіку винести щоб тут походу в ДБ не було. Я думаю коли ти переробиш роботу з модельками то ти до цього дійдеш.
-                        int IdOfCreatingWork;
-                        using (WorksDBContext dbContext = new())
-                        {
-                            dbContext.Works.Add(CreatingWork);
-                            dbContext.SaveChanges();
-                            IdOfCreatingWork = CreatingWork.ID;
-                            List<WorkerModel> workers = dbContext.Workers.ToList<WorkerModel>();
-                            WorkerModel workerUnderEdition = workers.Where(w => w.Name == SelectedWorker).FirstOrDefault();
-                            workerUnderEdition.WorkId = IdOfCreatingWork;
-                            dbContext.Update(workerUnderEdition);
-                            dbContext.SaveChanges();
-                        }
-                        _uploadingDataBaseService.RefreshDataBase();
+                        //int IdOfCreatingWork;
+                        //using (WorksDBContext dbContext = new())
+                        //{
+                        //    dbContext.Works.Add(CreatingWork);
+                        //    dbContext.SaveChanges();
+                        //    IdOfCreatingWork = CreatingWork.ID;
+                        //    List<WorkerModel> workers = dbContext.Workers.ToList<WorkerModel>();
+                        //    WorkerModel workerUnderEdition = workers.Where(w => w.Name == SelectedWorker).FirstOrDefault();
+                        //    workerUnderEdition.WorkId = IdOfCreatingWork;
+                        //    dbContext.Update(workerUnderEdition);
+                        //    dbContext.SaveChanges();
+                        //}
+                       
                         //v: те саме по цій рефрешінг модел, тут її викосиш.
                         
                         enteredNewWork = null;

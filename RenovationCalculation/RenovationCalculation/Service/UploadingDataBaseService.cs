@@ -9,9 +9,14 @@ using System.Threading.Tasks;
 
 namespace RenovationCalculation.Model
 {
-    class UploadingDataBaseService
+    class UploadingDataBaseService : INotifyPropertyChanged
     {
-        public event Action RefreshedDatbaseEvent;
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
 
         private ObservableCollection<TypeOfWorkModel> TypeOfWorks = new();
         public ObservableCollection<TypeOfWorkModel> typeOfWorks
@@ -33,23 +38,33 @@ namespace RenovationCalculation.Model
             }
         }
 
-        //v: ось такий підхід не дуже явний, коли ти кидєш свої лісти в якусь штуку і вона докорінно їх змінює.
-        //ти маєш працювати з одним джерелом істини. Якщо хтось добавляється в списки роботяг, то моделька має уже бути з цим роботягою без потреби всім кому цікавить робити Refresh
-        public void RefreshDataBase()
+        public void AddWorks(TypeOfWorkModel typeOfWorkModel)
         {
             using (WorksDBContext db = new WorksDBContext())
             {
-                typeOfWorks.Clear();
-                listOfWorkers.Clear();
-                foreach (var item in (db.Workers.ToList())) // addrenge is not avaliable
+                db.Works.Add(typeOfWorkModel);
+                db.SaveChanges();                
+            }
+            typeOfWorks.Add(typeOfWorkModel);
+            OnPropertyChanged("typeOfWorks");
+        }
+
+        //v: ось такий підхід не дуже явний, коли ти кидєш свої лісти в якусь штуку і вона докорінно їх змінює.
+        //ти маєш працювати з одним джерелом істини. Якщо хтось добавляється в списки роботяг, то моделька має уже бути з цим роботягою без потреби всім кому цікавить робити Refresh
+        public void UploadDataBase()
+        {
+            using (WorksDBContext db = new WorksDBContext())
+            {
+                foreach (var item in (db.Workers.ToList())) // addrange is not avaliable
                 {
                     listOfWorkers.Add(item);
+                    OnPropertyChanged("typeOfWorks");
                 }
                 foreach (var item in (db.Works.ToList()))
                 {
                     typeOfWorks.Add(item);
+                    OnPropertyChanged("listOfWorkers");
                 }
-                RefreshedDatbaseEvent();
             }
         }
     }
