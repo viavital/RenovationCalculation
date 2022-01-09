@@ -7,8 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:ApplictionVewModel="clr-namespace:RenovationCalculation.ApplictionViewModel" x:Class="RenovationCalculation.MainWindow"
         mc:Ignorable="d"
-        Title="Calculation of renovating works" Height="500" Width="800" MinHeight="380" MinWidth="800"
-        IsEnabled="{Binding isEnabledMainWindow}">
+        Title="Calculation of renovating works" Height="500" Width="800" MinHeight="380" MinWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.66*"/>
@@ -22,9 +21,9 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0">
-                <TextBox x:Name="TextboxEnterNameOfWork" Text="{Binding enteredNewWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam"/>
+                <TextBox Text="{Binding enteredNewWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam"/>
 
-                <ComboBox x:Name="NameOfSelectedWorker" FontSize="20" materialDesign:HintAssist.Hint="Select worker"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
+                <ComboBox FontSize="20" materialDesign:HintAssist.Hint="Select worker"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
                           ItemsSource="{Binding workers}" SelectedItem="{Binding selectedWorker, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -33,12 +32,12 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <TextBox Text="{Binding enteredQuantityOfWork}" x:Name="TextBoxEnteredQuantityOfHours" FontSize="20" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Quantity of hours" Cursor="IBeam" />
+                <TextBox Text="{Binding enteredQuantityOfWork}" FontSize="20" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Quantity of hours" Cursor="IBeam" />
 
-                <TextBox  Text="{Binding enteredCostOfWork}" x:Name="TextBoxEnteredCostOfWork" FontSize="20" materialDesign:HintAssist.Hint="Enter cost of the work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" />
+                <TextBox  Text="{Binding enteredCostOfWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter cost of the work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" />
             </StackPanel>
 
-            <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Content="Add new work" FontSize="18"  Margin="5.5" Height="45" Width="200" Cursor="Hand" Command="{Binding AddWorkCommand}" CommandParameter="{Binding}"/>
+            <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Content="Add new work" FontSize="18"  Margin="5.5" Height="45" Width="200" Cursor="Hand" Command="{Binding AddWorkCommand}"/>
 
         </Grid>
 
@@ -52,7 +51,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <ListBox x:Name="ListBoxOfWorks" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedWork}" ItemsSource="{Binding TypeOfWorks}">
+            <ListBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedWork}" ItemsSource="{Binding TypeOfWorks}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="3">
@@ -62,7 +61,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <ListBox x:Name="ListBoxOfWorkers"  Visibility="Hidden" IsEnabled="False"  Grid.Row="0" Grid.Column="1" ItemsSource="{Binding workers}">
+            <ListBox Visibility="Hidden" IsEnabled="False"  Grid.Row="0" Grid.Column="1" ItemsSource="{Binding workers}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="3">

@@ -1,17 +1,4 @@
-﻿using RenovationCalculation.ApplictionViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 
 namespace RenovationCalculation.View
@@ -21,19 +8,10 @@ namespace RenovationCalculation.View
     /// </summary>
     public partial class Adding_a_new_worker : Window
     {
-        private AddingWorkerViewModel addingWorkerViewModel = new();
-
+        //v: тут код не пишемо, якщо виникає потреба щось тут писати - треба шукати проблему.
         public Adding_a_new_worker()
         {
-            this.DataContext = addingWorkerViewModel;
             InitializeComponent();
-            addingWorkerViewModel.CloseAddWorkerWindowEvent += CloseAddWorkerWindowHandler;
-        }
-
-        private void CloseAddWorkerWindowHandler()
-        {
-            this.Close();
-            addingWorkerViewModel.CloseAddWorkerWindowEvent -= CloseAddWorkerWindowHandler;
         }
     }
 }

@@ -10,24 +10,21 @@ using System.Runtime.CompilerServices;
 using System.Data.Entity;
 using System.Windows.Input;
 using RenovationCalculation.View;
+using RenovationCalculation.Service;
 
 namespace RenovationCalculation.ApplictionViewModel
 {
     class StackOfAddingWorksViewModel : INotifyPropertyChanged
     {
-        private bool IsEnabledMainWindow { get; set; } = true;
-        public bool isEnabledMainWindow
-        {
-            get { return IsEnabledMainWindow; }
-            set
-            {
-                IsEnabledMainWindow = value;
-                OnPropertyChanged();
-            }
-        }
-        public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; set; } = new ObservableCollection<TypeOfWorkModel>();
+        //v: викосив IsEnabledMainWindow - виглядало як костиль, без нього зараз наче норм працює
 
-        private ObservableCollection<WorkerModel> Workers { get; set; } = new ObservableCollection<WorkerModel>();
+        private readonly WindowNavService _windowNavService;
+
+        //v: прибрав звідси set
+        public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; } = new ObservableCollection<TypeOfWorkModel>();
+
+        //v: get set на приватних полях не пишемо
+        private ObservableCollection<WorkerModel> Workers = new ObservableCollection<WorkerModel>();
         public ObservableCollection<WorkerModel> workers
         {
             get { return Workers; }
@@ -39,13 +36,18 @@ namespace RenovationCalculation.ApplictionViewModel
         }
         public StackOfAddingWorksViewModel()
         {
+            _windowNavService = new();
+            //v: такого підходу з RefreshingDataBaseModel треба позбутись. Ти її створюєш викликаєш метод в який передаєш свої лісти і потім викидаєш цю рефрешінг модел.
+            // в тебе має бути джерело даних - модель, чи сторедж, де буде завжди актуальна інформація. Якщо хтось в неї щось дописав, твої лісти тут мають слухати ці хміни і автоматично актуалізуватись.
+            // щоб не виникало ситуації коли в базі одні данні а на екрані інші
+            // ось наприклад як ти почав робити TypeOfWorkModel яка є INotifyPropertyChanged і може сповіщати слухачів про зміни полів, так само і тут перероби.
             RefreshingDataBaseModel refreshingDataBaseModel = new();
             refreshingDataBaseModel.RefreshDataBase(workers, TypeOfWorks);
-            workers.Insert(0, AddWorkerMenuSelection);
+            workers.Insert(0, _addWorkerMenuSelection);
         }
 
-        public event Action AddNewWorkerEvent;
-        public WorkerModel AddWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
+        //v: видалив public event Action AddNewWorkerEvent; з цієї вьюмодельки нам немає кому кидати екшини
+        private readonly WorkerModel _addWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
 
         private string EnteredNewWork;
         public string enteredNewWork
@@ -65,9 +67,12 @@ namespace RenovationCalculation.ApplictionViewModel
             {
                 SelectedWorker = value;
                 OnPropertyChanged();
-                if (value == AddWorkerMenuSelection.Name) // opening window of adding new worker
+                if (value == _addWorkerMenuSelection.Name) // opening window of adding new worker
                 {
-                    AddNewWorkerEvent?.Invoke();
+                    //v: ось таке рішення коли ти в сетері змінної викликаєш якусь додаткову логіку не дуже гарне.
+                    // Це через те що в тебе один з елементів списку поводить себе не так як всі інші.
+                    // Поки лишив так, можливо підгуглиш краще рішення, як роблять люди в таких випадках, якщо не знайдеш - лишай так.
+                    _windowNavService.CreateAddWorkerWindow();
                 }
             }
         }
@@ -89,7 +94,7 @@ namespace RenovationCalculation.ApplictionViewModel
             set
             {
                 EnteredCostOfWork = value;
-                OnPropertyChanged("");
+                OnPropertyChanged();
             }
         }
 
@@ -106,20 +111,16 @@ namespace RenovationCalculation.ApplictionViewModel
             get
             {
                 return addWorkCommand ??
-                    (addWorkCommand = new RelayCommand(obj =>
+                    //v: тут можна параметр не використовувати взагалі, так як ти знаходишся в цій вью моделі де потрібні якісь зміни.
+                    (addWorkCommand = new RelayCommand(_ =>
                     {
                         TypeOfWorkModel CreatingWork = new();
 
-                        var vm = obj as StackOfAddingWorksViewModel;
-                        var nameOfWork = vm.EnteredNewWork;
-                        var SelectedWorker_vm = vm.SelectedWorker;
-                        var QuantityOfHours = vm.EnteredQuantityOfWork;
-                        var CostOfWork = vm.EnteredCostOfWork;
+                        CreatingWork.typeOfWorkName = EnteredNewWork;
+                        CreatingWork.quantityHoursOfWork = EnteredQuantityOfWork;
+                        CreatingWork.totalPriceOfWork = EnteredCostOfWork;
 
-                        CreatingWork.typeOfWorkName = nameOfWork;
-                        CreatingWork.quantityHoursOfWork = QuantityOfHours;
-                        CreatingWork.totalPriceOfWork = CostOfWork;
-
+                        //v: хотілось би якось цю логіку винести щоб тут походу в ДБ не було. Я думаю коли ти переробиш роботу з модельками то ти до цього дійдеш.
                         int IdOfCreatingWork;
                         using (WorksDBContext dbContext = new())
                         {
@@ -127,19 +128,18 @@ namespace RenovationCalculation.ApplictionViewModel
                             dbContext.SaveChanges();
                             IdOfCreatingWork = CreatingWork.ID;
                             List<WorkerModel> workers = dbContext.Workers.ToList<WorkerModel>();
-                            WorkerModel workerUnderEdition = workers.Where(w => w.Name == SelectedWorker_vm).FirstOrDefault();
+                            WorkerModel workerUnderEdition = workers.Where(w => w.Name == SelectedWorker).FirstOrDefault();
                             workerUnderEdition.WorkId = IdOfCreatingWork;
                             dbContext.Update(workerUnderEdition);
                             dbContext.SaveChanges();
                         }
+                        //v: те саме по цій рефрешінг модел, тут її викосиш.
                         RefreshingDataBaseModel refreshingDataBaseModel = new RefreshingDataBaseModel();
                         refreshingDataBaseModel.RefreshDataBase(workers, TypeOfWorks);
                         enteredNewWork = null;
                         enteredQuantityOfWork = 0;
                         enteredCostOfWork = 0;
-                        workers.Insert(0, AddWorkerMenuSelection);
-                        //nameOfWork for example, other fields can be the same way.
-                        //here you can save to DB or do another work.
+                        workers.Insert(0, _addWorkerMenuSelection);
                     }));
             }
         }
