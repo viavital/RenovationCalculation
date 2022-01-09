@@ -11,6 +11,7 @@ using System.Data.Entity;
 using System.Windows.Input;
 using RenovationCalculation.View;
 using RenovationCalculation.Service;
+using System.Collections.Specialized;
 
 namespace RenovationCalculation.ApplictionViewModel
 {
@@ -46,13 +47,14 @@ namespace RenovationCalculation.ApplictionViewModel
             refreshingDataBaseModel.RefreshDataBase(workers, TypeOfWorks);
             workers.Insert(0, _addWorkerMenuSelection);
             _someModel = new SomeModel();
-            _someModel.PropertyChanged += OnSomeChanged;
+            _someModel.SomeStrings.CollectionChanged += OnSomeStrChanged;
         }
 
-        private void OnSomeChanged(object sender, PropertyChangedEventArgs e)
+        private void OnSomeStrChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            //todo here you can TypeOfWorks.Add(..... 
-            Console.WriteLine("OnSomeChanged!!!!");
+            //todo here you can add element to collection....
+            var newItem = e.NewItems[0];
+            Console.WriteLine(newItem);
         }
 
         //v: видалив public event Action AddNewWorkerEvent; з цієї вьюмодельки нам немає кому кидати екшини
