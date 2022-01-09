@@ -39,8 +39,7 @@ namespace RenovationCalculation.ApplictionViewModel
             _uploadingDataBaseService = new();
             _uploadingDataBaseService.PropertyChanged += _uploadingDataBaseService_PropertyChanged;
             _uploadingDataBaseService.UploadDataBase();
-            TypeOfWorks = _uploadingDataBaseService.typeOfWorks;
-            listOfWorkers = _uploadingDataBaseService.listOfWorkers;
+            
         
             //v: такого підходу з RefreshingDataBaseModel треба позбутись. Ти її створюєш викликаєш метод в який передаєш свої лісти і потім викидаєш цю рефрешінг модел.
             // в тебе має бути джерело даних - модель, чи сторедж, де буде завжди актуальна інформація. Якщо хтось в неї щось дописав, твої лісти тут мають слухати ці хміни і автоматично актуалізуватись.
@@ -52,7 +51,8 @@ namespace RenovationCalculation.ApplictionViewModel
 
         private void _uploadingDataBaseService_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            
+            TypeOfWorks = _uploadingDataBaseService.typeOfWorks;
+            listOfWorkers = _uploadingDataBaseService.listOfWorkers;
         }
        
         //v: видалив public event Action AddNewWorkerEvent; з цієї вьюмодельки нам немає кому кидати екшини
