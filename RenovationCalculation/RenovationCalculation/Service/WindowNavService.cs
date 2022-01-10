@@ -15,6 +15,7 @@ namespace RenovationCalculation.Service
     // ось тут більше про це https://docs.microsoft.com/en-us/answers/questions/21808/opening-a-new-window-on-a-button-click-mvvm-wpf.html та https://stackoverflow.com/a/16173553
     class WindowNavService
     {
+        public event Action CloseWindowEvent;
         public void CreateAddWorkerWindow()
         {
             var addWorkerVM = new AddingWorkerViewModel();
@@ -22,7 +23,7 @@ namespace RenovationCalculation.Service
             {
                 DataContext = addWorkerVM
             };
-            addWorkerVM.CloseAddWorkerWindowEvent += () => addWorkerWindow.Close();
+            addWorkerVM.CloseAddWorkerWindowEvent += () => { addWorkerWindow.Close(); CloseWindowEvent(); };
             addWorkerWindow.Show();
         }
     }

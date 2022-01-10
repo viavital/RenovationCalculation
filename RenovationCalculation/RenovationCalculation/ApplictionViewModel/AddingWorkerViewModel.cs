@@ -12,10 +12,18 @@ namespace RenovationCalculation.ApplictionViewModel
 {
     class AddingWorkerViewModel : INotifyPropertyChanged
     {
+        private readonly UploadingDataBaseService uploadingDataBaseService = new();
         public AddingWorkerViewModel()
         {
-            
+            uploadingDataBaseService.PropertyChanged += UploadingDataBaseService_PropertyChanged;
+            uploadingDataBaseService.UploadDataBase();
         }
+
+        private void UploadingDataBaseService_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            uploadingDataBaseService.listOfWorkers = workersInAddingWorkerVM;
+        }
+
         private string EnteredNameOfNewWorker;
         public string enteredNameOfNewWorker
         {
@@ -36,6 +44,16 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
+        private string SelectedWorker;
+        public string selectedWorker
+        {
+            get { return SelectedWorker; }
+            set
+            {
+                SelectedWorker = value;
+                OnPropertyChanged();                
+            }
+        }
 
         private RelayCommand AddWorkerCommand;
         public RelayCommand addWorkerCommand
@@ -52,11 +70,7 @@ namespace RenovationCalculation.ApplictionViewModel
 
                         CreatingWorker.Name = nameOfWorker;
 
-                        using (WorksDBContext dbContext = new())
-                        {
-                            dbContext.Workers.Add(CreatingWorker);
-                            dbContext.SaveChanges();
-                        }                       
+                        uploadingDataBaseService.AddWorker(CreatingWorker);      
                         enteredNameOfNewWorker = null;
                     }));
             }
@@ -70,14 +84,10 @@ namespace RenovationCalculation.ApplictionViewModel
                 return RemoveWorkerCommand ??
                     (RemoveWorkerCommand = new RelayCommand(obj =>
                     {
-                        WorkerModel workerToRemove = obj as WorkerModel;
+                        string workerToRemove = obj as string;
                         if (workerToRemove != null)
                         {
-                            using (WorksDBContext dbContext = new())
-                            {
-                                dbContext.Workers.Remove(workerToRemove);
-                                dbContext.SaveChanges();
-                            }
+                            uploadingDataBaseService.DeleteWorker(workerToRemove);
                         }
                     }
                     ));

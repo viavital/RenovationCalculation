@@ -46,7 +46,28 @@ namespace RenovationCalculation.Model
                 db.SaveChanges();                
             }
             typeOfWorks.Add(typeOfWorkModel);
-            OnPropertyChanged("typeOfWorks");
+            OnPropertyChanged("");
+        }
+        public void AddWorker(WorkerModel workerModel)
+        {
+            using (WorksDBContext db = new WorksDBContext())
+            {
+                db.Workers.Add(workerModel);
+                db.SaveChanges();
+            }
+            listOfWorkers.Add(workerModel);
+            OnPropertyChanged("");
+        }
+        public void DeleteWorker(string NameWorkerToRemove)
+        {
+            WorkerModel WorkerToRemove = listOfWorkers.FirstOrDefault(w => w.Name == NameWorkerToRemove);
+            using (WorksDBContext db = new WorksDBContext())
+            {                
+                db.Workers.Remove(WorkerToRemove);
+                db.SaveChanges();
+            }
+            listOfWorkers.Remove(WorkerToRemove);
+            OnPropertyChanged("");
         }
 
         //v: ось такий підхід не дуже явний, коли ти кидєш свої лісти в якусь штуку і вона докорінно їх змінює.

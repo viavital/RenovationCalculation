@@ -55,7 +55,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="3">
-                            <TextBlock FontSize="20"  TextAlignment="Right" Text="{Binding  typeOfWorkName, UpdateSourceTrigger=PropertyChanged}" LineHeight="Auto"/>
+                            <TextBlock FontSize="20"  TextAlignment="Right" Text="{Binding  typeOfWorkName}" LineHeight="Auto"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

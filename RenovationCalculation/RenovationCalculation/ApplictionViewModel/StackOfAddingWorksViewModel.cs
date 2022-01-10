@@ -38,6 +38,7 @@ namespace RenovationCalculation.ApplictionViewModel
             _windowNavService = new();            
             _uploadingDataBaseService = new();
             _uploadingDataBaseService.PropertyChanged += _uploadingDataBaseService_PropertyChanged;
+            _windowNavService.CloseWindowEvent += _windowNavService_CloseWindowEvent;
             _uploadingDataBaseService.UploadDataBase();
             
         
@@ -47,6 +48,11 @@ namespace RenovationCalculation.ApplictionViewModel
             // ось наприклад як ти почав робити TypeOfWorkModel яка є INotifyPropertyChanged і може сповіщати слухачів про зміни полів, так само і тут перероби.
 
             ListOfWorkers.Insert(0, _addWorkerMenuSelection);
+        }
+
+        private void _windowNavService_CloseWindowEvent()
+        {
+            
         }
 
         private void _uploadingDataBaseService_PropertyChanged(object sender, PropertyChangedEventArgs e)
