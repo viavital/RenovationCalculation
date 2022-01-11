@@ -1,88 +1,76 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RenovationCalculation.Model;
+﻿using RenovationCalculation.Model;
+using RenovationCalculation.Service;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Data.Entity;
-using System.Windows.Input;
-using RenovationCalculation.View;
-using RenovationCalculation.Service;
 
 namespace RenovationCalculation.ApplictionViewModel
 {
-    class StackOfAddingWorksViewModel : INotifyPropertyChanged
+    class StackOfAddingWorksViewModel : INotifyPropertyChanged, IDisposable
     {
         
         private readonly WindowNavService _windowNavService;
-        private readonly UploadingDataBaseService _uploadingDataBaseService;
-        
-        public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; set; } = new ObservableCollection<TypeOfWorkModel>();
+        private readonly TypeOfWorksService _typeOfWorkService;
+        private readonly WorkersService _workersService;
 
-        //v: get set на приватних полях не пишемо
-        private ObservableCollection<WorkerModel> ListOfWorkers = new ObservableCollection<WorkerModel>();
-        public ObservableCollection<WorkerModel> listOfWorkers
-        {
-            get { return ListOfWorkers; }
-            set
-            {
-                ListOfWorkers = value;
-                OnPropertyChanged();
-            }
-        }
+        private readonly WorkerModel _editWorkersSelection = new WorkerModel() { Name = "Add / Remove ..." };
+
+        public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; }
+        public ObservableCollection<WorkerModel> ListOfWorkers { get; }
+
         public StackOfAddingWorksViewModel()
         {            
-            _windowNavService = new();            
-            _uploadingDataBaseService = new();
-            _uploadingDataBaseService.PropertyChanged += _uploadingDataBaseService_PropertyChanged;
-            _windowNavService.CloseWindowEvent += _windowNavService_CloseWindowEvent;
-            _uploadingDataBaseService.UploadDataBase();
-            
-        
-            //v: такого підходу з RefreshingDataBaseModel треба позбутись. Ти її створюєш викликаєш метод в який передаєш свої лісти і потім викидаєш цю рефрешінг модел.
-            // в тебе має бути джерело даних - модель, чи сторедж, де буде завжди актуальна інформація. Якщо хтось в неї щось дописав, твої лісти тут мають слухати ці хміни і автоматично актуалізуватись.
-            // щоб не виникало ситуації коли в базі одні данні а на екрані інші
-            // ось наприклад як ти почав робити TypeOfWorkModel яка є INotifyPropertyChanged і може сповіщати слухачів про зміни полів, так само і тут перероби.
+            _windowNavService = new();
 
-            ListOfWorkers.Insert(0, _addWorkerMenuSelection);
+            _typeOfWorkService = TypeOfWorksService.GetInstance();
+            TypeOfWorks = new ObservableCollection<TypeOfWorkModel>(_typeOfWorkService.GetAllWorks());
+            _typeOfWorkService.WorkAddedEvent += OnTypeOfWorkAdded;
+
+            _workersService = WorkersService.GetInstance();
+            ListOfWorkers = new ObservableCollection<WorkerModel>(_workersService.GetAllWorkers());
+            ListOfWorkers.Insert(0, _editWorkersSelection);
+            _workersService.WorkerAddedEvent += OnWorkerAdded;
+            _workersService.WorkerDeletedEvent += OnWorkerDeleted;
         }
 
-        private void _windowNavService_CloseWindowEvent()
+        private void OnTypeOfWorkAdded(TypeOfWorkModel work)
         {
-            
+            TypeOfWorks.Add(work);
         }
 
-        private void _uploadingDataBaseService_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnWorkerAdded(WorkerModel worker)
         {
-            TypeOfWorks = _uploadingDataBaseService.typeOfWorks;
-            listOfWorkers = _uploadingDataBaseService.listOfWorkers;
+            ListOfWorkers.Add(worker);
         }
-       
-        //v: видалив public event Action AddNewWorkerEvent; з цієї вьюмодельки нам немає кому кидати екшини
-        private readonly WorkerModel _addWorkerMenuSelection = new WorkerModel() { Name = "Add..." };
 
-        private string EnteredNewWork;
-        public string enteredNewWork
+        private void OnWorkerDeleted(WorkerModel worker)
         {
-            get { return EnteredNewWork; }
+            if (ListOfWorkers.Contains(worker))
+            {
+                ListOfWorkers.Remove(worker);
+            }
+        }
+
+        private string enteredNewWork;
+        public string EnteredNewWork
+        {
+            get { return enteredNewWork; }
             set
             {
-                EnteredNewWork = value;
+                enteredNewWork = value;
                 OnPropertyChanged();
             }
         }
-        private string SelectedWorker;
-        public string selectedWorker
+        private WorkerModel selectedWorker;
+        public WorkerModel SelectedWorker
         {
-            get { return SelectedWorker; }
+            get { return selectedWorker; }
             set
             {
-                SelectedWorker = value;
+                selectedWorker = value;
                 OnPropertyChanged();
-                if (value == _addWorkerMenuSelection.Name) // opening window of adding new worker
+                if (value == _editWorkersSelection) // opening window of adding new worker
                 {
                     //v: ось таке рішення коли ти в сетері змінної викликаєш якусь додаткову логіку не дуже гарне.
                     // Це через те що в тебе один з елементів списку поводить себе не так як всі інші.
@@ -92,23 +80,23 @@ namespace RenovationCalculation.ApplictionViewModel
             }
         }
 
-        private int EnteredQuantityOfWork;
-        public int enteredQuantityOfWork
+        private int enteredQuantityOfWork;
+        public int EnteredQuantityOfWork
         {
-            get { return EnteredQuantityOfWork; }
+            get { return enteredQuantityOfWork; }
             set
             {
-                EnteredQuantityOfWork = value;
+                enteredQuantityOfWork = value;
                 OnPropertyChanged();
             }
         }
-        private int EnteredCostOfWork;
-        public int enteredCostOfWork
+        private int enteredCostOfWork;
+        public int EnteredCostOfWork
         {
-            get { return EnteredCostOfWork; }
+            get { return enteredCostOfWork; }
             set
             {
-                EnteredCostOfWork = value;
+                enteredCostOfWork = value;
                 OnPropertyChanged();
             }
         }
@@ -126,38 +114,28 @@ namespace RenovationCalculation.ApplictionViewModel
             get
             {
                 return addWorkCommand ??
-                    //v: тут можна параметр не використовувати взагалі, так як ти знаходишся в цій вью моделі де потрібні якісь зміни.
                     (addWorkCommand = new RelayCommand(_ =>
                     {
                         TypeOfWorkModel CreatingWork = new();
+                        CreatingWork.typeOfWorkName = enteredNewWork;
+                        CreatingWork.quantityHoursOfWork = enteredQuantityOfWork;
+                        CreatingWork.totalPriceOfWork = enteredCostOfWork;
 
-                        CreatingWork.typeOfWorkName = EnteredNewWork;
-                        CreatingWork.quantityHoursOfWork = EnteredQuantityOfWork;
-                        CreatingWork.totalPriceOfWork = EnteredCostOfWork;
-
-                        _uploadingDataBaseService.AddWorks(CreatingWork);
-                        //v: хотілось би якось цю логіку винести щоб тут походу в ДБ не було. Я думаю коли ти переробиш роботу з модельками то ти до цього дійдеш.
-                        //int IdOfCreatingWork;
-                        //using (WorksDBContext dbContext = new())
-                        //{
-                        //    dbContext.Works.Add(CreatingWork);
-                        //    dbContext.SaveChanges();
-                        //    IdOfCreatingWork = CreatingWork.ID;
-                        //    List<WorkerModel> workers = dbContext.Workers.ToList<WorkerModel>();
-                        //    WorkerModel workerUnderEdition = workers.Where(w => w.Name == SelectedWorker).FirstOrDefault();
-                        //    workerUnderEdition.WorkId = IdOfCreatingWork;
-                        //    dbContext.Update(workerUnderEdition);
-                        //    dbContext.SaveChanges();
-                        //}
-                       
-                        //v: те саме по цій рефрешінг модел, тут її викосиш.
+                        _typeOfWorkService.AddWork(CreatingWork);
                         
-                        enteredNewWork = null;
-                        enteredQuantityOfWork = 0;
-                        enteredCostOfWork = 0;
-                        listOfWorkers.Insert(0, _addWorkerMenuSelection);
+                        EnteredNewWork = null;
+                        EnteredQuantityOfWork = 0;
+                        EnteredCostOfWork = 0;
+                        SelectedWorker = null;
                     }));
             }
+        }
+
+        public void Dispose()
+        {
+            _typeOfWorkService.WorkAddedEvent -= OnTypeOfWorkAdded;
+            _workersService.WorkerAddedEvent -= OnWorkerAdded;
+            _workersService.WorkerDeletedEvent -= OnWorkerDeleted;
         }
     }
 }

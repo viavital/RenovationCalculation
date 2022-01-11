@@ -1,110 +1,105 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RenovationCalculation.Model;
+using RenovationCalculation.Service;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using RenovationCalculation.Model;
 
 namespace RenovationCalculation.ApplictionViewModel
 {
-    class AddingWorkerViewModel : INotifyPropertyChanged
+    class AddingWorkerViewModel : INotifyPropertyChanged, IDisposable
     {
-        private readonly UploadingDataBaseService uploadingDataBaseService = new();
+        private readonly WorkersService _workersService;
+
+        public ObservableCollection<WorkerModel> Workers { get; }
+
         public AddingWorkerViewModel()
         {
-            uploadingDataBaseService.PropertyChanged += UploadingDataBaseService_PropertyChanged;
-            uploadingDataBaseService.UploadDataBase();
+            _workersService = WorkersService.GetInstance();
+            Workers = new ObservableCollection<WorkerModel>(_workersService.GetAllWorkers());
+            _workersService.WorkerAddedEvent += OnWorkerAdded;
+            _workersService.WorkerDeletedEvent += OnWorkerDeleted;
         }
 
-        private void UploadingDataBaseService_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnWorkerAdded(WorkerModel worker)
         {
-            uploadingDataBaseService.listOfWorkers = workersInAddingWorkerVM;
+            Workers.Add(worker);
         }
 
-        private string EnteredNameOfNewWorker;
-        public string enteredNameOfNewWorker
+        private void OnWorkerDeleted(WorkerModel worker)
         {
-            get { return EnteredNameOfNewWorker; }
+            if (Workers.Contains(worker))
+            {
+                Workers.Remove(worker);
+            }
+        }
+
+        private string enteredNameOfNewWorker;
+        public string EnteredNameOfNewWorker
+        {
+            get { return enteredNameOfNewWorker; }
             set
             {
-                EnteredNameOfNewWorker = value;
+                enteredNameOfNewWorker = value;
                 OnPropertyChanged();
             }
         }
-        private ObservableCollection<WorkerModel> WorkersInAddingWorkerVM { get; set; } = new ObservableCollection<WorkerModel>();
-        public ObservableCollection<WorkerModel> workersInAddingWorkerVM
+
+        private WorkerModel selectedWorker;
+        public WorkerModel SelectedWorker
         {
-            get { return WorkersInAddingWorkerVM; }
+            get { return selectedWorker; }
             set
             {
-                WorkersInAddingWorkerVM = value;
+                selectedWorker = value;
                 OnPropertyChanged();
             }
         }
-        private string SelectedWorker;
-        public string selectedWorker
-        {
-            get { return SelectedWorker; }
-            set
-            {
-                SelectedWorker = value;
-                OnPropertyChanged();                
-            }
-        }
 
-        private RelayCommand AddWorkerCommand;
-        public RelayCommand addWorkerCommand
+
+        private RelayCommand addWorkerCommand;
+        public RelayCommand AddWorkerCommand
         {
             get
             {
-                return AddWorkerCommand ??
-                    (AddWorkerCommand = new RelayCommand(obj =>
+                return addWorkerCommand ??
+                    (addWorkerCommand = new RelayCommand(_ =>
                     {
                         WorkerModel CreatingWorker = new();
 
-                        var vmAddNewWorker = obj as AddingWorkerViewModel;
-                        var nameOfWorker = vmAddNewWorker.EnteredNameOfNewWorker;
+                        CreatingWorker.Name = enteredNameOfNewWorker;
+                        _workersService.AddWorker(CreatingWorker);
 
-                        CreatingWorker.Name = nameOfWorker;
-
-                        uploadingDataBaseService.AddWorker(CreatingWorker);      
-                        enteredNameOfNewWorker = null;
+                        EnteredNameOfNewWorker = null;
                     }));
             }
         }
 
-        private RelayCommand RemoveWorkerCommand;
-        public RelayCommand removeWorkerCommand
+        private RelayCommand removeWorkerCommand;
+        public RelayCommand RemoveWorkerCommand
         {
             get
             {
-                return RemoveWorkerCommand ??
-                    (RemoveWorkerCommand = new RelayCommand(obj =>
+                return removeWorkerCommand ??
+                    (removeWorkerCommand = new RelayCommand(obj =>
                     {
-                        string workerToRemove = obj as string;
+                        var workerToRemove = obj as WorkerModel;
                         if (workerToRemove != null)
                         {
-                            uploadingDataBaseService.DeleteWorker(workerToRemove);
+                            _workersService.DeleteWorker(workerToRemove);
                         }
                     }
                     ));
             }
         }
+
         public event Action CloseAddWorkerWindowEvent;
-        private RelayCommand CloseWindowCommand;
-        public RelayCommand closeWindowCommand
+        private RelayCommand closeWindowCommand;
+        public RelayCommand CloseWindowCommand
         {
             get
             {
-                return CloseWindowCommand ??
-                    (CloseWindowCommand = new RelayCommand(obj =>
-                    {
-                        CloseAddWorkerWindowEvent();
-                    }
-                    ));
+                return closeWindowCommand ?? (closeWindowCommand = new RelayCommand(_ => CloseAddWorkerWindowEvent()));
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -112,6 +107,12 @@ namespace RenovationCalculation.ApplictionViewModel
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        public void Dispose()
+        {
+            _workersService.WorkerAddedEvent -= OnWorkerAdded;
+            _workersService.WorkerDeletedEvent -= OnWorkerDeleted;
         }
     }
 }

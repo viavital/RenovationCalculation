@@ -4,12 +4,12 @@
 namespace RenovationCalculation.View
 {
     /// <summary>
-    /// Логика взаимодействия для Adding_a_new_worker.xaml
+    /// Логика взаимодействия для AddingNewWorker.xaml
     /// </summary>
-    public partial class Adding_a_new_worker : Window
+    public partial class AddingNewWorker : Window
     {
         //v: тут код не пишемо, якщо виникає потреба щось тут писати - треба шукати проблему.
-        public Adding_a_new_worker()
+        public AddingNewWorker()
         {
             InitializeComponent();
         }

@@ -1,4 +1,4 @@
-﻿<Window x:Class="RenovationCalculation.View.Adding_a_new_worker"
+﻿<Window x:Class="RenovationCalculation.View.AddingNewWorker"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,6 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:applictionviewmodel="clr-namespace:RenovationCalculation.ApplictionViewModel" 
         WindowStartupLocation="CenterScreen"
-        x:Name="AddingWorkerWindow"
         >
     <Grid>
         <Grid.RowDefinitions>
@@ -22,13 +21,13 @@
             <ColumnDefinition Width="*" MinWidth="80"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0">
-            <TextBox Text="{Binding enteredNameOfNewWorker, UpdateSourceTrigger=PropertyChanged}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new worker:" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+            <TextBox Text="{Binding EnteredNameOfNewWorker, UpdateSourceTrigger=PropertyChanged}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new worker:" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
         </StackPanel>
-        <Button Grid.Row="1" Width="80" HorizontalAlignment="Left" FontSize="20" Margin="10,0,0,5" Cursor="Hand" Command="{Binding addWorkerCommand}" CommandParameter="{Binding}"> Add </Button>
-        <Button Grid.Row="1" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand" Command="{Binding removeWorkerCommand}" CommandParameter="{Binding selectedWorker}">Delete</Button>
-        <Button Command="{Binding closeWindowCommand}" CommandParameter="{Binding}"  Grid.Row="1" Grid.Column="2" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand"> Close </Button>
+        <Button Grid.Row="1" Width="80" HorizontalAlignment="Left" FontSize="20" Margin="10,0,0,5" Cursor="Hand" Command="{Binding AddWorkerCommand}"> Add </Button>
+        <Button Grid.Row="1" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand" Command="{Binding RemoveWorkerCommand}" CommandParameter="{Binding SelectedWorker}">Delete</Button>
+        <Button Command="{Binding CloseWindowCommand}" Grid.Row="1" Grid.Column="2" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand"> Close </Button>
         <GridSplitter Grid.Column="1" Width="3"/>
-        <ListBox x:Name="ListBoxOfWorkers" SelectedItem="{Binding selectedWorker, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2"  ItemsSource="{Binding workersInAddingWorkerVM}">
+        <ListBox SelectedItem="{Binding SelectedWorker, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2"  ItemsSource="{Binding Workers}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock  FontSize="20"  TextAlignment="Right" Text="{Binding Name}" LineHeight="Auto"/>

@@ -21,10 +21,10 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0">
-                <TextBox Text="{Binding enteredNewWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam"/>
+                <TextBox Text="{Binding EnteredNewWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam"/>
 
                 <ComboBox FontSize="20" materialDesign:HintAssist.Hint="Select worker"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
-                          ItemsSource="{Binding listOfWorkers}" SelectedItem="{Binding selectedWorker, UpdateSourceTrigger=PropertyChanged}">
+                          ItemsSource="{Binding ListOfWorkers}" SelectedItem="{Binding SelectedWorker, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Name}"/>
@@ -32,9 +32,9 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <TextBox Text="{Binding enteredQuantityOfWork}" FontSize="20" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Quantity of hours" Cursor="IBeam" />
+                <TextBox  Text="{Binding EnteredQuantityOfWork}" FontSize="20" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Quantity of hours" Cursor="IBeam" />
 
-                <TextBox  Text="{Binding enteredCostOfWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter cost of the work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" />
+                <TextBox  Text="{Binding EnteredCostOfWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter cost of the work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" />
             </StackPanel>
 
             <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Content="Add new work" FontSize="18"  Margin="5.5" Height="45" Width="200" Cursor="Hand" Command="{Binding AddWorkCommand}"/>
