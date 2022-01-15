@@ -51,7 +51,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <ListBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedWork}" ItemsSource="{Binding TypeOfWorks}">
+            <ListBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedWork, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding TypeOfWorks}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="3">
@@ -61,18 +61,13 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <ListBox Visibility="Hidden" IsEnabled="False"  Grid.Row="0" Grid.Column="1" ItemsSource="{Binding workers}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Margin="3">
-                            <Label Content="Name of Worker:"/>
-                            <TextBlock FontSize="20"  TextAlignment="Right" Text="{Binding Name}" LineHeight="Auto"/>
-                            <Label Content="Price per hour:"/>
-                            <TextBlock FontSize="20"  TextAlignment="Right" Text="{Binding PricePerHour}" LineHeight="Auto"/>
+            <StackPanel Grid.Row="0" Grid.Column="0" Margin="3" DataContext="{Binding SelectedWork}">
+                            <Label Content="Name of Work:"/>
+                            <TextBlock FontSize="20"  TextAlignment="Right" Text="{Binding typeOfWorkName}" LineHeight="Auto"/>
+                            <Label Content="Quntity of taken hours:"/>
+                            <TextBlock FontSize="20"  TextAlignment="Right" Text="{Binding quantityHoursOfWork}" LineHeight="Auto"/>
                         </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                    
         </Grid>
 
     </Grid>

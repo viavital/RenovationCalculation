@@ -9,7 +9,7 @@ namespace RenovationCalculation.ApplictionViewModel
 {
     class StackOfAddingWorksViewModel : INotifyPropertyChanged, IDisposable
     {
-        
+
         private readonly WindowNavService _windowNavService;
         private readonly TypeOfWorksService _typeOfWorkService;
         private readonly WorkersService _workersService;
@@ -20,7 +20,7 @@ namespace RenovationCalculation.ApplictionViewModel
         public ObservableCollection<WorkerModel> ListOfWorkers { get; }
 
         public StackOfAddingWorksViewModel()
-        {            
+        {
             _windowNavService = new();
 
             _typeOfWorkService = TypeOfWorksService.GetInstance();
@@ -80,6 +80,17 @@ namespace RenovationCalculation.ApplictionViewModel
             }
         }
 
+        private TypeOfWorkModel selectedWork;
+        public TypeOfWorkModel SelectedWork
+        {
+            get { return selectedWork; }
+            set
+            {
+                selectedWork = value;
+                OnPropertyChanged();
+            }
+        }
+
         private int enteredQuantityOfWork;
         public int EnteredQuantityOfWork
         {
@@ -120,9 +131,10 @@ namespace RenovationCalculation.ApplictionViewModel
                         CreatingWork.typeOfWorkName = enteredNewWork;
                         CreatingWork.quantityHoursOfWork = enteredQuantityOfWork;
                         CreatingWork.totalPriceOfWork = enteredCostOfWork;
+                        CreatingWork.WorkerID = SelectedWorker.ID;
 
                         _typeOfWorkService.AddWork(CreatingWork);
-                        
+
                         EnteredNewWork = null;
                         EnteredQuantityOfWork = 0;
                         EnteredCostOfWork = 0;

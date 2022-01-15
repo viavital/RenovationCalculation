@@ -42,6 +42,14 @@ namespace RenovationCalculation.Model
             }
         }
 
+        private int workerID;
+        public int WorkerID
+        {
+            get { return workerID; }
+            set { workerID = value; }
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
