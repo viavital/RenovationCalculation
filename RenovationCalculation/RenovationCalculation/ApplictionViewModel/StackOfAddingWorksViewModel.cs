@@ -101,13 +101,13 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
-        private int enteredCostOfWork;
-        public int EnteredCostOfWork
+        private int enteredCostOfMaterials;
+        public int EnteredCostOfMaterials
         {
-            get { return enteredCostOfWork; }
+            get { return enteredCostOfMaterials; }
             set
             {
-                enteredCostOfWork = value;
+                enteredCostOfMaterials = value;
                 OnPropertyChanged();
             }
         }
@@ -130,14 +130,14 @@ namespace RenovationCalculation.ApplictionViewModel
                         TypeOfWorkModel CreatingWork = new();
                         CreatingWork.typeOfWorkName = enteredNewWork;
                         CreatingWork.quantityHoursOfWork = enteredQuantityOfWork;
-                        CreatingWork.totalPriceOfWork = enteredCostOfWork;
+                        CreatingWork.CostOfMaterials = enteredCostOfMaterials;
                         CreatingWork.WorkerID = SelectedWorker.ID;
 
                         _typeOfWorkService.AddWork(CreatingWork);
 
                         EnteredNewWork = null;
                         EnteredQuantityOfWork = 0;
-                        EnteredCostOfWork = 0;
+                        EnteredCostOfMaterials = 0;
                         SelectedWorker = null;
                     }));
             }

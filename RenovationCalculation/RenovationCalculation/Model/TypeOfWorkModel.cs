@@ -21,6 +21,7 @@ namespace RenovationCalculation.Model
                 OnPropertyChanged();
             }
         }
+
         private int QuantityHoursOfWork;
         public int quantityHoursOfWork
         {
@@ -31,13 +32,13 @@ namespace RenovationCalculation.Model
                 OnPropertyChanged();
             }
         }
-        private int TotalPriceOfWork;
-        public int totalPriceOfWork
+        private int costOfMaterials;
+        public int CostOfMaterials
         {
-            get { return TotalPriceOfWork; }
+            get { return costOfMaterials; }
             set
             {
-                TotalPriceOfWork = value;
+                costOfMaterials = value;
                 OnPropertyChanged();
             }
         }
@@ -49,6 +50,16 @@ namespace RenovationCalculation.Model
             set { workerID = value; }
         }
 
+        private int totalCostOfWork;
+        public int TotalCostOfWork
+        {
+            get { return totalCostOfWork; }
+            set 
+            { 
+                totalCostOfWork = value;
+                OnPropertyChanged();
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")

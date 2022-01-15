@@ -34,7 +34,7 @@
 
                 <TextBox  Text="{Binding EnteredQuantityOfWork}" FontSize="20" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Quantity of hours" Cursor="IBeam" />
 
-                <TextBox  Text="{Binding EnteredCostOfWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter cost of the work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" />
+                <TextBox  Text="{Binding EnteredCostOfMaterials}" FontSize="20" materialDesign:HintAssist.Hint="Enter cost of materials:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" />
             </StackPanel>
 
             <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Content="Add new work" FontSize="18"  Margin="5.5" Height="45" Width="200" Cursor="Hand" Command="{Binding AddWorkCommand}"/>
@@ -62,11 +62,13 @@
             </ListBox>
 
             <StackPanel Grid.Row="0" Grid.Column="0" Margin="3" DataContext="{Binding SelectedWork}">
-                            <Label Content="Name of Work:"/>
-                            <TextBlock FontSize="20"  TextAlignment="Right" Text="{Binding typeOfWorkName}" LineHeight="Auto"/>
-                            <Label Content="Quntity of taken hours:"/>
-                            <TextBlock FontSize="20"  TextAlignment="Right" Text="{Binding quantityHoursOfWork}" LineHeight="Auto"/>
-                        </StackPanel>
+                <Label Content="Name of Work:"/>
+                <TextBlock FontSize="20"  TextAlignment="Left" Text="{Binding typeOfWorkName}" LineHeight="Auto"/>
+                <Label Content="Quntity of taken hours:"/>
+                <TextBlock FontSize="20"  TextAlignment="Left" Text="{Binding quantityHoursOfWork}" LineHeight="Auto"/>
+                <Label Content="Cost of materials:"/>
+                <TextBlock FontSize="20"  TextAlignment="Left" Text="{Binding CostOfMaterials}" LineHeight="Auto"/>
+            </StackPanel>
                     
         </Grid>
 

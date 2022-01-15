@@ -22,6 +22,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0">
             <TextBox Text="{Binding EnteredNameOfNewWorker, UpdateSourceTrigger=PropertyChanged}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new worker:" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+            <TextBox Text="{Binding EnteredPricePerHour, UpdateSourceTrigger=PropertyChanged}" FontSize="20" materialDesign:HintAssist.Hint="Enter price per hour:" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
         </StackPanel>
         <Button Grid.Row="1" Width="80" HorizontalAlignment="Left" FontSize="20" Margin="10,0,0,5" Cursor="Hand" Command="{Binding AddWorkerCommand}"> Add </Button>
         <Button Grid.Row="1" Width="80" HorizontalAlignment="Right" FontSize="20" Margin="0,0,10,5" Cursor="Hand" Command="{Binding RemoveWorkerCommand}" CommandParameter="{Binding SelectedWorker}">Delete</Button>

@@ -13,6 +13,8 @@ namespace RenovationCalculation.Model
 
         public int WorkId { get; set; }
 
+        public int PricePerHour { get; set; }
+
         public override string ToString()
         {
             return Name;

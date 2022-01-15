@@ -45,6 +45,17 @@ namespace RenovationCalculation.ApplictionViewModel
             }
         }
 
+        private int enteredPricePerHour;
+        public int EnteredPricePerHour
+        {
+            get { return enteredPricePerHour; }
+            set
+            {
+                enteredPricePerHour = value;
+                OnPropertyChanged();
+            }
+        }
+
         private WorkerModel selectedWorker;
         public WorkerModel SelectedWorker
         {
@@ -55,7 +66,6 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
-
 
         private RelayCommand addWorkerCommand;
         public RelayCommand AddWorkerCommand
@@ -68,9 +78,11 @@ namespace RenovationCalculation.ApplictionViewModel
                         WorkerModel CreatingWorker = new();
 
                         CreatingWorker.Name = enteredNameOfNewWorker;
+                        CreatingWorker.PricePerHour = enteredPricePerHour;
                         _workersService.AddWorker(CreatingWorker);
 
                         EnteredNameOfNewWorker = null;
+                        EnteredPricePerHour = 0;
                     }));
             }
         }
