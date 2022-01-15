@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Linq;
 
 namespace RenovationCalculation.ApplictionViewModel
 {
@@ -32,7 +33,9 @@ namespace RenovationCalculation.ApplictionViewModel
             ListOfWorkers.Insert(0, _editWorkersSelection);
             _workersService.WorkerAddedEvent += OnWorkerAdded;
             _workersService.WorkerDeletedEvent += OnWorkerDeleted;
-        }
+            ChangingSelectionOfWorkEvent += ChangingSelectionOfWorkEventHandler;
+
+        }        
 
         private void OnTypeOfWorkAdded(TypeOfWorkModel work)
         {
@@ -62,6 +65,7 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
+        
         private WorkerModel selectedWorker;
         public WorkerModel SelectedWorker
         {
@@ -80,6 +84,7 @@ namespace RenovationCalculation.ApplictionViewModel
             }
         }
 
+        private event Action ChangingSelectionOfWorkEvent;
         private TypeOfWorkModel selectedWork;
         public TypeOfWorkModel SelectedWork
         {
@@ -87,6 +92,7 @@ namespace RenovationCalculation.ApplictionViewModel
             set
             {
                 selectedWork = value;
+                ChangingSelectionOfWorkEvent();
                 OnPropertyChanged();
             }
         }
@@ -112,6 +118,22 @@ namespace RenovationCalculation.ApplictionViewModel
             }
         }
 
+        private WorkerModel workerOnSelectedWork;
+        public WorkerModel WorkerOnSelectedWork
+        {
+            get { return workerOnSelectedWork; }
+            set 
+            { 
+                workerOnSelectedWork = value;
+                OnPropertyChanged();
+            }
+        }
+        private void ChangingSelectionOfWorkEventHandler()
+        {
+            WorkerOnSelectedWork = ListOfWorkers.FirstOrDefault(u => u.ID == SelectedWork.WorkerID);
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
@@ -132,6 +154,7 @@ namespace RenovationCalculation.ApplictionViewModel
                         CreatingWork.quantityHoursOfWork = enteredQuantityOfWork;
                         CreatingWork.CostOfMaterials = enteredCostOfMaterials;
                         CreatingWork.WorkerID = SelectedWorker.ID;
+                        CreatingWork.TotalCostOfWork = SelectedWorker.PricePerHour * EnteredQuantityOfWork;
 
                         _typeOfWorkService.AddWork(CreatingWork);
 

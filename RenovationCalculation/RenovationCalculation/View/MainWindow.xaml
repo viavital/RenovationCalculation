@@ -61,13 +61,17 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <StackPanel Grid.Row="0" Grid.Column="0" Margin="3" DataContext="{Binding SelectedWork}">
+            <StackPanel Grid.Row="0" Grid.Column="0" Margin="3" >
                 <Label Content="Name of Work:"/>
-                <TextBlock FontSize="20"  TextAlignment="Left" Text="{Binding typeOfWorkName}" LineHeight="Auto"/>
+                <TextBlock DataContext="{Binding SelectedWork}"  TextAlignment="Left" Text="{Binding typeOfWorkName}" LineHeight="Auto"/>
+                <Label Content="Contractor:" />
+                <TextBlock DataContext="{Binding WorkerOnSelectedWork }" FontSize="20" TextAlignment="Left" Text="{Binding Name}" LineHeight="Auto"/>
                 <Label Content="Quntity of taken hours:"/>
-                <TextBlock FontSize="20"  TextAlignment="Left" Text="{Binding quantityHoursOfWork}" LineHeight="Auto"/>
+                <TextBlock DataContext="{Binding SelectedWork}" FontSize="20"  TextAlignment="Left" Text="{Binding quantityHoursOfWork}" LineHeight="Auto"/>
                 <Label Content="Cost of materials:"/>
-                <TextBlock FontSize="20"  TextAlignment="Left" Text="{Binding CostOfMaterials}" LineHeight="Auto"/>
+                <TextBlock DataContext="{Binding SelectedWork}" FontSize="20"  TextAlignment="Left" Text="{Binding CostOfMaterials}" LineHeight="Auto"/>
+                <Label Content="Total cost of work:" FontWeight="Bold" FontSize="20"/>
+                <TextBlock DataContext="{Binding SelectedWork}" FontSize="21" FontWeight="Bold" TextAlignment="Left" Text="{Binding TotalCostOfWork}" LineHeight="Auto"/>
             </StackPanel>
                     
         </Grid>
