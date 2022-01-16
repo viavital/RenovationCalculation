@@ -20,6 +20,7 @@ namespace RenovationCalculation.Service
         }
 
         public event Action<TypeOfWorkModel> WorkAddedEvent = delegate { };
+        public event Action<TypeOfWorkModel> WorkUpdatedEvent = delegate { };
 
         private List<TypeOfWorkModel> _allWorks;
 
@@ -45,6 +46,17 @@ namespace RenovationCalculation.Service
             }
             _allWorks.Add(workToAdd);
             WorkAddedEvent(workToAdd);
+        }
+        public void UpdateWork(TypeOfWorkModel workToUpdate)
+        {
+            using (var db = new WorksDBContext())
+            {
+                db.Works.Update(workToUpdate);
+                db.SaveChanges();
+            }
+           TypeOfWorkModel FindingWork = _allWorks.FirstOrDefault(u => u.ID == workToUpdate.ID);
+           FindingWork = workToUpdate;
+           WorkUpdatedEvent(workToUpdate);
         }
     }
 }

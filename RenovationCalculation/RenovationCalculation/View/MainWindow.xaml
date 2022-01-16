@@ -63,17 +63,20 @@
 
             <StackPanel Grid.Row="0" Grid.Column="0" Margin="3" >
                 <Label Content="Name of Work:"/>
-                <TextBlock DataContext="{Binding SelectedWork}"  TextAlignment="Left" Text="{Binding typeOfWorkName}" LineHeight="Auto"/>
+                <TextBox DataContext="{Binding SelectedWork}" TextAlignment="Left" Text="{Binding typeOfWorkName, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Cursor="IBeam" />
                 <Label Content="Contractor:" />
-                <TextBlock DataContext="{Binding WorkerOnSelectedWork }" FontSize="20" TextAlignment="Left" Text="{Binding Name}" LineHeight="Auto"/>
+                <TextBlock DataContext="{Binding WorkerOnSelectedWork }" FontSize="20" TextAlignment="Left" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Content="Quntity of taken hours:"/>
-                <TextBlock DataContext="{Binding SelectedWork}" FontSize="20"  TextAlignment="Left" Text="{Binding quantityHoursOfWork}" LineHeight="Auto"/>
+                <TextBox DataContext="{Binding SelectedWork}" FontSize="20"  TextAlignment="Left" Text="{Binding quantityHoursOfWork, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Content="Cost of materials:"/>
-                <TextBlock DataContext="{Binding SelectedWork}" FontSize="20"  TextAlignment="Left" Text="{Binding CostOfMaterials}" LineHeight="Auto"/>
+                <TextBox  DataContext="{Binding SelectedWork}" FontSize="20"  TextAlignment="Left" Text="{Binding CostOfMaterials, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Content="Total cost of work:" FontWeight="Bold" FontSize="20"/>
-                <TextBlock DataContext="{Binding SelectedWork}" FontSize="21" FontWeight="Bold" TextAlignment="Left" Text="{Binding TotalCostOfWork}" LineHeight="Auto"/>
+                <TextBlock DataContext="{Binding SelectedWork}" FontSize="21" FontWeight="Bold" TextAlignment="Left" Text="{Binding TotalCostOfWork}"/>
             </StackPanel>
-                    
+
+            <Button  Content="Edit" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,5" Height="45"  Width="75" Cursor="Hand" Command="{Binding EditWorkCommand}" />
+            <Button  Content="remove" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,5" Height="45"  Width="80" Cursor="Hand" />
+
         </Grid>
 
     </Grid>

@@ -27,6 +27,7 @@ namespace RenovationCalculation.ApplictionViewModel
             _typeOfWorkService = TypeOfWorksService.GetInstance();
             TypeOfWorks = new ObservableCollection<TypeOfWorkModel>(_typeOfWorkService.GetAllWorks());
             _typeOfWorkService.WorkAddedEvent += OnTypeOfWorkAdded;
+            _typeOfWorkService.WorkUpdatedEvent += OnTypeOfWorkUpdated;
 
             _workersService = WorkersService.GetInstance();
             ListOfWorkers = new ObservableCollection<WorkerModel>(_workersService.GetAllWorkers());
@@ -35,11 +36,16 @@ namespace RenovationCalculation.ApplictionViewModel
             _workersService.WorkerDeletedEvent += OnWorkerDeleted;
             ChangingSelectionOfWorkEvent += ChangingSelectionOfWorkEventHandler;
 
-        }        
+        }    
 
         private void OnTypeOfWorkAdded(TypeOfWorkModel work)
         {
             TypeOfWorks.Add(work);
+        }
+        private void OnTypeOfWorkUpdated(TypeOfWorkModel work)
+        {
+            TypeOfWorkModel FindingWork = TypeOfWorks.FirstOrDefault(u => u.ID == work.ID);
+            FindingWork = work;
         }
 
         private void OnWorkerAdded(WorkerModel worker)
@@ -154,13 +160,29 @@ namespace RenovationCalculation.ApplictionViewModel
                         CreatingWork.quantityHoursOfWork = enteredQuantityOfWork;
                         CreatingWork.CostOfMaterials = enteredCostOfMaterials;
                         CreatingWork.WorkerID = SelectedWorker.ID;
-                        CreatingWork.TotalCostOfWork = SelectedWorker.PricePerHour * EnteredQuantityOfWork;
+                        CreatingWork.TotalCostOfWork = SelectedWorker.PricePerHour * EnteredQuantityOfWork + SelectedWork.CostOfMaterials;
 
                         _typeOfWorkService.AddWork(CreatingWork);
 
                         EnteredNewWork = null;
                         EnteredQuantityOfWork = 0;
                         EnteredCostOfMaterials = 0;
+                        SelectedWorker = null;
+                    }));
+            }
+        }
+        private RelayCommand editWorkCommand;
+        public RelayCommand EditWorkCommand
+        {
+            get
+            {
+                return editWorkCommand ??
+                    (editWorkCommand = new RelayCommand(_ =>
+                    {
+                        SelectedWork.TotalCostOfWork = WorkerOnSelectedWork.PricePerHour * SelectedWork.quantityHoursOfWork + selectedWork.CostOfMaterials;
+
+                        _typeOfWorkService.UpdateWork(SelectedWork);
+                        
                         SelectedWorker = null;
                     }));
             }
