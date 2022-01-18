@@ -8,27 +8,45 @@ using System.Linq;
 
 namespace RenovationCalculation.ApplictionViewModel
 {
-    class StackOfAddingWorksViewModel : INotifyPropertyChanged, IDisposable
+    partial class StackOfAddingWorksViewModel : INotifyPropertyChanged, IDisposable
     {
+        private event Action NeedToCountTotalSumEvent;
 
         private readonly WindowNavService _windowNavService;
         private readonly TypeOfWorksService _typeOfWorkService;
         private readonly WorkersService _workersService;
+        private readonly TotalSumCounterService _totalSumCounter = new();
 
         private readonly WorkerModel _editWorkersSelection = new WorkerModel() { Name = "Add / Remove ..." };
 
         public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; }
         public ObservableCollection<WorkerModel> ListOfWorkers { get; }
+              
+        private int totalSumOfRenovation;
+        public int TotalSumOfRenovation
+        {
+            get { return totalSumOfRenovation; }
+            set 
+            {
+                totalSumOfRenovation = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public StackOfAddingWorksViewModel()
         {
-            _windowNavService = new();
+            _windowNavService = new();            
 
             _typeOfWorkService = TypeOfWorksService.GetInstance();
-            TypeOfWorks = new ObservableCollection<TypeOfWorkModel>(_typeOfWorkService.GetAllWorks());
+            TypeOfWorks = new ObservableCollection<TypeOfWorkModel>(_typeOfWorkService.GetAllWorks());           
             _typeOfWorkService.WorkAddedEvent += OnTypeOfWorkAdded;
             _typeOfWorkService.WorkUpdatedEvent += OnTypeOfWorkUpdated;
+            _typeOfWorkService.WorkDeletedEvent += OnTypeOfWorkDeleted;
+            _totalSumCounter.TotalSumCountedEvent += OnSumCounted;  // повертає суму і присвоює її в вікно Тотал сум
+            NeedToCountTotalSumEvent += OnNeededCountTotalSum; // сам знаю що діч якась, але ж класно просто повставляти де треба перерахувати суму
 
+            NeedToCountTotalSumEvent();
             _workersService = WorkersService.GetInstance();
             ListOfWorkers = new ObservableCollection<WorkerModel>(_workersService.GetAllWorkers());
             ListOfWorkers.Insert(0, _editWorkersSelection);
@@ -36,18 +54,25 @@ namespace RenovationCalculation.ApplictionViewModel
             _workersService.WorkerDeletedEvent += OnWorkerDeleted;
             ChangingSelectionOfWorkEvent += ChangingSelectionOfWorkEventHandler;
 
-        }    
+        }       
 
         private void OnTypeOfWorkAdded(TypeOfWorkModel work)
         {
             TypeOfWorks.Add(work);
+            NeedToCountTotalSumEvent();
         }
         private void OnTypeOfWorkUpdated(TypeOfWorkModel work)
         {
             TypeOfWorkModel FindingWork = TypeOfWorks.FirstOrDefault(u => u.ID == work.ID);
             FindingWork = work;
+            SelectedWork = default;
+            NeedToCountTotalSumEvent();
         }
-
+        private void OnTypeOfWorkDeleted(TypeOfWorkModel work)
+        {            
+            TypeOfWorks.Remove(work);
+            NeedToCountTotalSumEvent();
+        }
         private void OnWorkerAdded(WorkerModel worker)
         {
             ListOfWorkers.Add(worker);
@@ -60,6 +85,16 @@ namespace RenovationCalculation.ApplictionViewModel
                 ListOfWorkers.Remove(worker);
             }
         }
+        private void OnSumCounted(int Sum)
+        {
+            TotalSumOfRenovation = Sum;
+        }
+
+        private void OnNeededCountTotalSum()
+        {
+            _totalSumCounter.CountTotalSum(TypeOfWorks);
+        }
+        
 
         private string enteredNewWork;
         public string EnteredNewWork
@@ -136,9 +171,22 @@ namespace RenovationCalculation.ApplictionViewModel
         }
         private void ChangingSelectionOfWorkEventHandler()
         {
-            WorkerOnSelectedWork = ListOfWorkers.FirstOrDefault(u => u.ID == SelectedWork.WorkerID);
+            if (SelectedWork != null)
+            {
+                IsRemoveBtnEnabled = true;
+                IsEditBtnEnabled = true;
+                WorkerOnSelectedWork = ListOfWorkers.FirstOrDefault(u => u.ID == SelectedWork.WorkerID);
+            }
+           else
+            {
+                IsEditBtnEnabled = false;
+                IsRemoveBtnEnabled = false;
+            }        
+            if (WorkerOnSelectedWork == null)
+            {
+                WorkerOnSelectedWork = new WorkerModel() { Name = "Can't find info", PricePerHour = 0 }; // потрібно ще придумати щоб навіть якщо ми видалили імя робочого, інфа про тариф збереглась
+            }
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -146,53 +194,15 @@ namespace RenovationCalculation.ApplictionViewModel
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-
-        private RelayCommand addWorkCommand;
-        public RelayCommand AddWorkCommand
-        {
-            get
-            {
-                return addWorkCommand ??
-                    (addWorkCommand = new RelayCommand(_ =>
-                    {
-                        TypeOfWorkModel CreatingWork = new();
-                        CreatingWork.typeOfWorkName = enteredNewWork;
-                        CreatingWork.quantityHoursOfWork = enteredQuantityOfWork;
-                        CreatingWork.CostOfMaterials = enteredCostOfMaterials;
-                        CreatingWork.WorkerID = SelectedWorker.ID;
-                        CreatingWork.TotalCostOfWork = SelectedWorker.PricePerHour * EnteredQuantityOfWork + SelectedWork.CostOfMaterials;
-
-                        _typeOfWorkService.AddWork(CreatingWork);
-
-                        EnteredNewWork = null;
-                        EnteredQuantityOfWork = 0;
-                        EnteredCostOfMaterials = 0;
-                        SelectedWorker = null;
-                    }));
-            }
-        }
-        private RelayCommand editWorkCommand;
-        public RelayCommand EditWorkCommand
-        {
-            get
-            {
-                return editWorkCommand ??
-                    (editWorkCommand = new RelayCommand(_ =>
-                    {
-                        SelectedWork.TotalCostOfWork = WorkerOnSelectedWork.PricePerHour * SelectedWork.quantityHoursOfWork + selectedWork.CostOfMaterials;
-
-                        _typeOfWorkService.UpdateWork(SelectedWork);
-                        
-                        SelectedWorker = null;
-                    }));
-            }
-        }
-
         public void Dispose()
         {
             _typeOfWorkService.WorkAddedEvent -= OnTypeOfWorkAdded;
             _workersService.WorkerAddedEvent -= OnWorkerAdded;
+            _typeOfWorkService.WorkUpdatedEvent -= OnTypeOfWorkUpdated;
+            _typeOfWorkService.WorkDeletedEvent -= OnTypeOfWorkDeleted;
             _workersService.WorkerDeletedEvent -= OnWorkerDeleted;
+            _totalSumCounter.TotalSumCountedEvent -= OnSumCounted;  
+            NeedToCountTotalSumEvent -= OnNeededCountTotalSum;
         }
     }
 }

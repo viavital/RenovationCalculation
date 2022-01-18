@@ -21,7 +21,7 @@ namespace RenovationCalculation.Service
 
         public event Action<TypeOfWorkModel> WorkAddedEvent = delegate { };
         public event Action<TypeOfWorkModel> WorkUpdatedEvent = delegate { };
-
+        public event Action<TypeOfWorkModel> WorkDeletedEvent = delegate { };
         private List<TypeOfWorkModel> _allWorks;
 
         public List<TypeOfWorkModel> GetAllWorks()
@@ -57,6 +57,16 @@ namespace RenovationCalculation.Service
            TypeOfWorkModel FindingWork = _allWorks.FirstOrDefault(u => u.ID == workToUpdate.ID);
            FindingWork = workToUpdate;
            WorkUpdatedEvent(workToUpdate);
+        }
+        public void DeleteWork(TypeOfWorkModel workToDelete)
+        {
+            using (var db = new WorksDBContext())
+            {
+                db.Works.Remove(workToDelete);
+                db.SaveChanges();
+            }
+            _allWorks.Remove(workToDelete);
+            WorkDeletedEvent(workToDelete);
         }
     }
 }
