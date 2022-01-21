@@ -1,0 +1,95 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RenovationCalculation"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:ApplictionVewModel="clr-namespace:RenovationCalculation.ApplictionViewModel" x:Class="RenovationCalculation.MainWindow"
+        mc:Ignorable="d"
+        Title="Calculation of renovating works" Height="500" Width="800" MinHeight="390" MinWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.6*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.26*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBox Text="{Binding EnteredNewWork}" FontSize="20" materialDesign:HintAssist.Hint="Enter name of new work:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam"/>
+
+                <ComboBox FontSize="20" materialDesign:HintAssist.Hint="Select worker"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
+                          ItemsSource="{Binding ListOfWorkers}" SelectedItem="{Binding SelectedWorker, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <TextBox  Text="{Binding EnteredQuantityOfWork}" FontSize="20" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Quantity of hours" Cursor="IBeam" />
+
+                <TextBox  Text="{Binding EnteredCostOfMaterials}" FontSize="20" materialDesign:HintAssist.Hint="Enter cost of materials:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" />
+            </StackPanel>
+
+            <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Content="Add new work" FontSize="18"  Margin="5.5" Height="45" Width="200" Cursor="Hand" Command="{Binding AddWorkCommand}"/>
+
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.25*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <ListBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedWork, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding TypeOfWorks}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="3">
+                            <TextBlock FontSize="20"  TextAlignment="Right" Text="{Binding  typeOfWorkName}" LineHeight="Auto"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel Grid.Row="0" Grid.Column="0" Margin="3" >
+                <Label Content="Name of Work:"/>
+                <TextBox DataContext="{Binding SelectedWork}" TextAlignment="Left" Text="{Binding typeOfWorkName, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Cursor="IBeam" />
+                <Label Content="Contractor:" />
+                <TextBlock DataContext="{Binding WorkerOnSelectedWork }" FontSize="20" TextAlignment="Left" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+                <Label Content="Quantity of taken hours:"/>
+                <TextBox DataContext="{Binding SelectedWork}" FontSize="20"  TextAlignment="Left" Text="{Binding quantityHoursOfWork, UpdateSourceTrigger=PropertyChanged}" />
+                <Label Content="Cost of materials:"/>
+                <TextBox  DataContext="{Binding SelectedWork}" FontSize="20"  TextAlignment="Left" Text="{Binding CostOfMaterials, UpdateSourceTrigger=PropertyChanged}" />
+                <Label Content="Total cost of work:" FontWeight="Bold" FontSize="20"/>
+                <TextBlock DataContext="{Binding SelectedWork}" FontSize="21" FontWeight="Bold" TextAlignment="Left" Text="{Binding TotalCostOfWork}"/>
+            </StackPanel>
+
+            <Button  Content="Edit" IsEnabled="{Binding IsEditBtnEnabled}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,5" Height="45"  Width="75" Cursor="Hand" Command="{Binding EditWorkCommand}" />
+            <Button  Content="remove" IsEnabled="{Binding IsRemoveBtnEnabled}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,5" Height="45"  Width="80" Cursor="Hand"  Command="{Binding RemoveWorkCommand}" CommandParameter="{Binding SelectedWork }"/>
+
+            <Border Margin="5,5,5,5" CornerRadius="10" Opacity="30" Background="Gray" BorderThickness="1" BorderBrush="Black" Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignToolBarMainPanelBorderStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>                        
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" FontSize="19" FontWeight="ExtraBold" FontStretch="Expanded"> Total cost of renovation:</Label>
+                    <TextBlock Text="{Binding TotalSumOfRenovation}" FontSize="20" FontWeight="ExtraBold" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}">  </TextBlock>
+                </Grid>
+            </Border>
+
+
+        </Grid>
+
+    </Grid>
+</Window>
