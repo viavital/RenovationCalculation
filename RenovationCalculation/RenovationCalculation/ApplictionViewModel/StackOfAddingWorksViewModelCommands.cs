@@ -17,14 +17,17 @@ namespace RenovationCalculation.ApplictionViewModel
                 return addWorkCommand ??
                     (addWorkCommand = new RelayCommand(_ =>
                     {
-                        TypeOfWorkModel CreatingWork = new();
-                        CreatingWork.typeOfWorkName = enteredNewWork;
-                        CreatingWork.quantityHoursOfWork = enteredQuantityOfWork;
-                        CreatingWork.CostOfMaterials = enteredCostOfMaterials;
-                        CreatingWork.WorkerID = SelectedWorker.ID;
-                        CreatingWork.TotalCostOfWork = SelectedWorker.PricePerHour * EnteredQuantityOfWork + enteredCostOfMaterials;
+                        if (enteredNewWork != " " && enteredQuantityOfWork >= 0 && SelectedWorker != null)
+                        {
+                            TypeOfWorkModel CreatingWork = new();
+                            CreatingWork.typeOfWorkName = enteredNewWork;
+                            CreatingWork.quantityHoursOfWork = enteredQuantityOfWork;
+                            CreatingWork.CostOfMaterials = enteredCostOfMaterials;
+                            CreatingWork.WorkerID = SelectedWorker.ID;
+                            CreatingWork.TotalCostOfWork = SelectedWorker.PricePerHour * EnteredQuantityOfWork + enteredCostOfMaterials;
 
-                        _typeOfWorkService.AddWork(CreatingWork);
+                            _typeOfWorkService.AddWork(CreatingWork);
+                        }                        
 
                         EnteredNewWork = null;
                         EnteredQuantityOfWork = 0;
