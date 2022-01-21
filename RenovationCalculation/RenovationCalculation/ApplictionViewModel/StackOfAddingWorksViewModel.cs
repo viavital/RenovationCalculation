@@ -10,8 +10,6 @@ namespace RenovationCalculation.ApplictionViewModel
 {
     partial class StackOfAddingWorksViewModel : INotifyPropertyChanged, IDisposable
     {
-        private event Action NeedToCountTotalSumEvent;
-
         private readonly WindowNavService _windowNavService;
         private readonly TypeOfWorksService _typeOfWorkService;
         private readonly WorkersService _workersService;
@@ -33,7 +31,6 @@ namespace RenovationCalculation.ApplictionViewModel
             }
         }
 
-
         public StackOfAddingWorksViewModel()
         {
             _windowNavService = new();            
@@ -42,11 +39,9 @@ namespace RenovationCalculation.ApplictionViewModel
             TypeOfWorks = new ObservableCollection<TypeOfWorkModel>(_typeOfWorkService.GetAllWorks());           
             _typeOfWorkService.WorkAddedEvent += OnTypeOfWorkAdded;
             _typeOfWorkService.WorkUpdatedEvent += OnTypeOfWorkUpdated;
-            _typeOfWorkService.WorkDeletedEvent += OnTypeOfWorkDeleted;
-            _totalSumCounter.TotalSumCountedEvent += OnSumCounted;  // повертає суму і присвоює її в вікно Тотал сум
-            NeedToCountTotalSumEvent += OnNeededCountTotalSum; // сам знаю що діч якась, але ж класно просто повставляти де треба перерахувати суму
+            _typeOfWorkService.WorkDeletedEvent += OnTypeOfWorkDeleted;           
 
-            NeedToCountTotalSumEvent();
+            _totalSumCounter.CountTotalSum(TypeOfWorks); 
             _workersService = WorkersService.GetInstance();
             ListOfWorkers = new ObservableCollection<WorkerModel>(_workersService.GetAllWorkers());
             ListOfWorkers.Insert(0, _editWorkersSelection);
@@ -59,19 +54,21 @@ namespace RenovationCalculation.ApplictionViewModel
         private void OnTypeOfWorkAdded(TypeOfWorkModel work)
         {
             TypeOfWorks.Add(work);
-            NeedToCountTotalSumEvent();
+          TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
         }
         private void OnTypeOfWorkUpdated(TypeOfWorkModel work)
         {
             TypeOfWorkModel FindingWork = TypeOfWorks.FirstOrDefault(u => u.ID == work.ID);
             FindingWork = work;
             SelectedWork = default;
-            NeedToCountTotalSumEvent();
+            TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
+            WorkerOnSelectedWork = null;
         }
         private void OnTypeOfWorkDeleted(TypeOfWorkModel work)
         {            
             TypeOfWorks.Remove(work);
-            NeedToCountTotalSumEvent();
+            TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
+            WorkerOnSelectedWork = null;
         }
         private void OnWorkerAdded(WorkerModel worker)
         {
@@ -84,17 +81,7 @@ namespace RenovationCalculation.ApplictionViewModel
             {
                 ListOfWorkers.Remove(worker);
             }
-        }
-        private void OnSumCounted(int Sum)
-        {
-            TotalSumOfRenovation = Sum;
-        }
-
-        private void OnNeededCountTotalSum()
-        {
-            _totalSumCounter.CountTotalSum(TypeOfWorks);
-        }
-        
+        }      
 
         private string enteredNewWork;
         public string EnteredNewWork
@@ -200,9 +187,7 @@ namespace RenovationCalculation.ApplictionViewModel
             _workersService.WorkerAddedEvent -= OnWorkerAdded;
             _typeOfWorkService.WorkUpdatedEvent -= OnTypeOfWorkUpdated;
             _typeOfWorkService.WorkDeletedEvent -= OnTypeOfWorkDeleted;
-            _workersService.WorkerDeletedEvent -= OnWorkerDeleted;
-            _totalSumCounter.TotalSumCountedEvent -= OnSumCounted;  
-            NeedToCountTotalSumEvent -= OnNeededCountTotalSum;
+            _workersService.WorkerDeletedEvent -= OnWorkerDeleted;            
         }
     }
 }
