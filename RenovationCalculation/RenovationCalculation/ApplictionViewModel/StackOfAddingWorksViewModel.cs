@@ -47,7 +47,7 @@ namespace RenovationCalculation.ApplictionViewModel
             ListOfWorkers.Insert(0, _editWorkersSelection);
             _workersService.WorkerAddedEvent += OnWorkerAdded;
             _workersService.WorkerDeletedEvent += OnWorkerDeleted;
-            ChangingSelectionOfWorkEvent += ChangingSelectionOfWorkEventHandler;
+            ChangingSelectionOfWorkEvent += ChangingSelectionOfWorkEvent;
 
         }       
 
@@ -111,8 +111,7 @@ namespace RenovationCalculation.ApplictionViewModel
                 }
             }
         }
-
-        private event Action ChangingSelectionOfWorkEvent;
+        
         private TypeOfWorkModel selectedWork;
         public TypeOfWorkModel SelectedWork
         {
@@ -120,7 +119,7 @@ namespace RenovationCalculation.ApplictionViewModel
             set
             {
                 selectedWork = value;
-                ChangingSelectionOfWorkEvent();
+                ChangingSelectionOfWork();
                 OnPropertyChanged();
             }
         }
@@ -156,7 +155,7 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
-        private void ChangingSelectionOfWorkEventHandler()
+        private void ChangingSelectionOfWork()
         {
             if (SelectedWork != null)
             {
