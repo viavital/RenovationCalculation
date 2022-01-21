@@ -20,7 +20,6 @@ namespace RenovationCalculation.ApplictionViewModel
             _workersService.WorkerAddedEvent += OnWorkerAdded;
             _workersService.WorkerDeletedEvent += OnWorkerDeleted;
         }
-
         private void OnWorkerAdded(WorkerModel worker)
         {
             Workers.Add(worker);
