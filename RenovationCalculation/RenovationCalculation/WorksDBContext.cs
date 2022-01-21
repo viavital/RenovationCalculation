@@ -12,6 +12,8 @@ namespace RenovationCalculation
     {
         public DbSet<TypeOfWorkModel> Works { get; set; }
         public DbSet<WorkerModel> Workers { get; set; }
+      //  public DbSet<SiteModel> Sites { get; set; }        // якщо розкоментити - вилазтить ексепшн
+       
 
         public readonly string DbPath = "../../../DatabaseOfWorks.db";
         protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite($"Data Source={DbPath}");

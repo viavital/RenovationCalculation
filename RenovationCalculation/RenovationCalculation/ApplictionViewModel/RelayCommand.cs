@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RenovationCalculation.ApplictionVewModel
+namespace RenovationCalculation.ApplictionViewModel
 {
-    class RelayCommand: ICommand
+    class RelayCommand : ICommand
     {
         private Action<object> execute;
         private Func<object, bool> canExecute;
@@ -22,6 +22,10 @@ namespace RenovationCalculation.ApplictionVewModel
         {
             this.execute = execute;
             this.canExecute = canExecute;
+        }
+
+        public RelayCommand()
+        {
         }
 
         public bool CanExecute(object parameter)
