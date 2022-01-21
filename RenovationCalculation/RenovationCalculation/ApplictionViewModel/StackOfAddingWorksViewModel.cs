@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using System.Collections.Specialized;
 
 namespace RenovationCalculation.ApplictionViewModel
 {
@@ -39,36 +40,37 @@ namespace RenovationCalculation.ApplictionViewModel
             TypeOfWorks = new ObservableCollection<TypeOfWorkModel>(_typeOfWorkService.GetAllWorks());           
             _typeOfWorkService.WorkAddedEvent += OnTypeOfWorkAdded;
             _typeOfWorkService.WorkUpdatedEvent += OnTypeOfWorkUpdated;
-            _typeOfWorkService.WorkDeletedEvent += OnTypeOfWorkDeleted;           
+            _typeOfWorkService.WorkDeletedEvent += OnTypeOfWorkDeleted;
+            TypeOfWorks.CollectionChanged += OnTypeOfWorksChanged;
 
-            _totalSumCounter.CountTotalSum(TypeOfWorks); 
+           TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks); 
             _workersService = WorkersService.GetInstance();
             ListOfWorkers = new ObservableCollection<WorkerModel>(_workersService.GetAllWorkers());
             ListOfWorkers.Insert(0, _editWorkersSelection);
             _workersService.WorkerAddedEvent += OnWorkerAdded;
-            _workersService.WorkerDeletedEvent += OnWorkerDeleted;
-            ChangingSelectionOfWorkEvent += ChangingSelectionOfWorkEvent;
-
-        }       
+            _workersService.WorkerDeletedEvent += OnWorkerDeleted;    
+        }      
 
         private void OnTypeOfWorkAdded(TypeOfWorkModel work)
         {
-            TypeOfWorks.Add(work);
-          TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
+           TypeOfWorks.Add(work);           
         }
         private void OnTypeOfWorkUpdated(TypeOfWorkModel work)
         {
-            TypeOfWorkModel FindingWork = TypeOfWorks.FirstOrDefault(u => u.ID == work.ID);
-            FindingWork = work;
-            SelectedWork = default;
-            TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
+           int IndexOfUpdatedWork = TypeOfWorks.IndexOf(work);
+            //TypeOfWorkModel FindingWork = TypeOfWorks.FirstOrDefault(u => u.ID == work.ID); // при такому методі не викликається CollectionChanged
+            TypeOfWorks[IndexOfUpdatedWork] = work;
+            SelectedWork = default;      
             WorkerOnSelectedWork = null;
         }
         private void OnTypeOfWorkDeleted(TypeOfWorkModel work)
         {            
-            TypeOfWorks.Remove(work);
-            TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
+            TypeOfWorks.Remove(work);            
             WorkerOnSelectedWork = null;
+        }
+        private void OnTypeOfWorksChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
         }
         private void OnWorkerAdded(WorkerModel worker)
         {

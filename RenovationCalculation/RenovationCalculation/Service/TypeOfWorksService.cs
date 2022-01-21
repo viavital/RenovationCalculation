@@ -54,8 +54,7 @@ namespace RenovationCalculation.Service
                 db.Works.Update(workToUpdate);
                 db.SaveChanges();
             }
-           TypeOfWorkModel FindingWork = _allWorks.FirstOrDefault(u => u.ID == workToUpdate.ID);
-           FindingWork = workToUpdate;
+           TypeOfWorkModel FindingWork = _allWorks.FirstOrDefault(u => u.ID == workToUpdate.ID);           
            WorkUpdatedEvent(workToUpdate);
         }
         public void DeleteWork(TypeOfWorkModel workToDelete)
