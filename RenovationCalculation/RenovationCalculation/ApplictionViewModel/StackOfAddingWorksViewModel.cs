@@ -42,7 +42,8 @@ namespace RenovationCalculation.ApplictionViewModel
             _typeOfWorkService.WorkUpdatedEvent += OnTypeOfWorkUpdated;
             _typeOfWorkService.WorkDeletedEvent += OnTypeOfWorkDeleted;
             TypeOfWorks.CollectionChanged += OnTypeOfWorksChanged;
-            EnteringOfQuantityofWork += OnEnteringQuantityOfWork; 
+            EnteringOfQuantityofWork += OnEnteringQuantityOfWork;
+            EnteredCostOfMaterialsEvent += OnEnteredCostOfMaterials;
 
 
             TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks); 
@@ -140,7 +141,6 @@ namespace RenovationCalculation.ApplictionViewModel
                 EnteringOfQuantityofWork();
             }
         }
-
         private int quantityOfWork;
         public int QuantityOfWork
         {
@@ -167,15 +167,42 @@ namespace RenovationCalculation.ApplictionViewModel
             }
         }
 
-        private int enteredCostOfMaterials;
-        public int EnteredCostOfMaterials
+        private event Action EnteredCostOfMaterialsEvent;
+        private string enteredCostOfMaterials;
+        public string EnteredCostOfMaterials
         {
             get { return enteredCostOfMaterials; }
             set
             {
                 enteredCostOfMaterials = value;
                 OnPropertyChanged();
+                EnteredCostOfMaterialsEvent();
             }
+        }
+        private int сostOfMaterials;
+        public int CostOfMaterials
+        {
+            get { return сostOfMaterials; }
+            set
+            {
+                сostOfMaterials = value;
+                OnPropertyChanged();
+            }
+        }
+        private void OnEnteredCostOfMaterials()
+        {
+            if (EnteredCostOfMaterials != null && EnteredCostOfMaterials.Length > 0)
+            {
+                int ParsedCostOfMaterials;
+                if (int.TryParse(EnteredCostOfMaterials, out ParsedCostOfMaterials))
+                {
+                    CostOfMaterials = ParsedCostOfMaterials;
+                }
+                else
+                {
+                    EnteredCostOfMaterials = EnteredCostOfMaterials.Remove(EnteredCostOfMaterials.Length - 1);
+                }
+            }            
         }
 
         private WorkerModel workerOnSelectedWork;

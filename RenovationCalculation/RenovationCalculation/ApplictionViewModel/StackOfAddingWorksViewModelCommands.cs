@@ -23,11 +23,11 @@ namespace RenovationCalculation.ApplictionViewModel
                         {
                             CreatingWork.typeOfWorkName = enteredNewWork.Trim();
                             CreatingWork.quantityHoursOfWork = QuantityOfWork;
-                            CreatingWork.CostOfMaterials = enteredCostOfMaterials;
+                            CreatingWork.CostOfMaterials = CostOfMaterials;
                             if (CreatingWork.typeOfWorkName != "" && CreatingWork.quantityHoursOfWork > 0 && SelectedWorker != null && CreatingWork.CostOfMaterials >=0)
                             {  
                                 CreatingWork.WorkerID = SelectedWorker.ID;
-                                CreatingWork.TotalCostOfWork = SelectedWorker.PricePerHour * QuantityOfWork + enteredCostOfMaterials;
+                                CreatingWork.TotalCostOfWork = SelectedWorker.PricePerHour * QuantityOfWork + CostOfMaterials;
                                 _typeOfWorkService.AddWork(CreatingWork);
                             }
                             else
@@ -41,7 +41,7 @@ namespace RenovationCalculation.ApplictionViewModel
                         }
                         EnteredNewWork = null;
                         EnteredQuantityOfWork = null;
-                        EnteredCostOfMaterials = 0;
+                        EnteredCostOfMaterials = null;
                         SelectedWorker = null;
                     }));
             }
