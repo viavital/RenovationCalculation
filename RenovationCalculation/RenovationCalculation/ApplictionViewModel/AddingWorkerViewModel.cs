@@ -19,6 +19,7 @@ namespace RenovationCalculation.ApplictionViewModel
             Workers = new ObservableCollection<WorkerModel>(_workersService.GetAllWorkers());
             _workersService.WorkerAddedEvent += OnWorkerAdded;
             _workersService.WorkerDeletedEvent += OnWorkerDeleted;
+            EnteredPricePerHourEvent += OnEnteredPricePerHourEvent;
         }
         private void OnWorkerAdded(WorkerModel worker)
         {
@@ -30,6 +31,21 @@ namespace RenovationCalculation.ApplictionViewModel
             if (Workers.Contains(worker))
             {
                 Workers.Remove(worker);
+            }
+        }
+        private void OnEnteredPricePerHourEvent()
+        {
+            if (EnteredPricePerHour != null && EnteredPricePerHour.Length > 0)
+            {
+                int ParsedPricePerHour;
+                if (int.TryParse(EnteredPricePerHour, out ParsedPricePerHour))
+                {
+                    PricePerHour = ParsedPricePerHour;
+                }
+                else
+                {
+                    EnteredPricePerHour = EnteredPricePerHour.Remove(EnteredPricePerHour.Length - 1);
+                }
             }
         }
 
@@ -44,14 +60,27 @@ namespace RenovationCalculation.ApplictionViewModel
             }
         }
 
-        private int enteredPricePerHour;
-        public int EnteredPricePerHour
+        private event Action EnteredPricePerHourEvent;
+        private string enteredpricePerHour;
+        public string EnteredPricePerHour
         {
-            get { return enteredPricePerHour; }
+            get { return enteredpricePerHour; }
             set
             {
-                enteredPricePerHour = value;
+                enteredpricePerHour = value;
                 OnPropertyChanged();
+                EnteredPricePerHourEvent();
+            }
+        }
+
+        private int pricePerHour;
+        public int PricePerHour
+        {
+            get { return pricePerHour; }
+            set
+            {
+                pricePerHour = value;
+              //  OnPropertyChanged();
             }
         }
 
@@ -77,11 +106,11 @@ namespace RenovationCalculation.ApplictionViewModel
                         WorkerModel CreatingWorker = new();
 
                         CreatingWorker.Name = enteredNameOfNewWorker;
-                        CreatingWorker.PricePerHour = enteredPricePerHour;
+                        CreatingWorker.PricePerHour = pricePerHour;
                         _workersService.AddWorker(CreatingWorker);
 
                         EnteredNameOfNewWorker = null;
-                        EnteredPricePerHour = 0;
+                        EnteredPricePerHour = null;
                     }));
             }
         }

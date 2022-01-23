@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Collections.Specialized;
+using System.Windows;
 
 namespace RenovationCalculation.ApplictionViewModel
 {
@@ -15,9 +16,9 @@ namespace RenovationCalculation.ApplictionViewModel
         private readonly TypeOfWorksService _typeOfWorkService;
         private readonly WorkersService _workersService;
         private readonly TotalSumCounterService _totalSumCounter = new();
+       
 
         private readonly WorkerModel _editWorkersSelection = new WorkerModel() { Name = "Add / Remove ..." };
-
         public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; }
         public ObservableCollection<WorkerModel> ListOfWorkers { get; }
               
@@ -31,7 +32,6 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
-
         public StackOfAddingWorksViewModel()
         {
             _windowNavService = new();            
@@ -151,6 +151,16 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
+        private bool isEditRemoveBtnEnabled;
+        public bool IsEditRemoveBtnEnabled
+        {
+            get { return isEditRemoveBtnEnabled; }
+            set
+            {
+                isEditRemoveBtnEnabled = value;
+                OnPropertyChanged();
+            }
+        }
         private void OnEnteringQuantityOfWork()
         {
             if (EnteredQuantityOfWork != null && EnteredQuantityOfWork.Length > 0)
@@ -218,15 +228,13 @@ namespace RenovationCalculation.ApplictionViewModel
         private void ChangingSelectionOfWork()
         {
             if (SelectedWork != null)
-            {
-                IsRemoveBtnEnabled = true;
-                IsEditBtnEnabled = true;
+            {                
+                IsEditRemoveBtnEnabled = true;
                 WorkerOnSelectedWork = ListOfWorkers.FirstOrDefault(u => u.ID == SelectedWork.WorkerID);
             }
            else
             {
-                IsEditBtnEnabled = false;
-                IsRemoveBtnEnabled = false;
+                IsEditRemoveBtnEnabled = false;                
             }        
             if (WorkerOnSelectedWork == null)
             {
@@ -240,6 +248,77 @@ namespace RenovationCalculation.ApplictionViewModel
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+          
+        private RelayCommand addWorkCommand;
+        public RelayCommand AddWorkCommand
+        {
+            get
+            {
+                return addWorkCommand ??
+                    (addWorkCommand = new RelayCommand(_ =>
+                    {
+                        TypeOfWorkModel CreatingWork = new();
+                        if (enteredNewWork != null)
+                        {
+                            CreatingWork.typeOfWorkName = enteredNewWork.Trim();
+                            CreatingWork.quantityHoursOfWork = QuantityOfWork;
+                            CreatingWork.CostOfMaterials = CostOfMaterials;
+                            if (CreatingWork.typeOfWorkName != "" && CreatingWork.quantityHoursOfWork > 0 && SelectedWorker != null && CreatingWork.CostOfMaterials >= 0)
+                            {
+                                CreatingWork.WorkerID = SelectedWorker.ID;
+                                CreatingWork.TotalCostOfWork = SelectedWorker.PricePerHour * QuantityOfWork + CostOfMaterials;
+                                _typeOfWorkService.AddWork(CreatingWork);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Inputed wrong data");
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Input name of work");
+                        }
+                        EnteredNewWork = null;
+                        EnteredQuantityOfWork = null;
+                        EnteredCostOfMaterials = null;
+                        SelectedWorker = null;
+                    }));
+            }
+        }
+        private RelayCommand editWorkCommand;
+        public RelayCommand EditWorkCommand
+        {
+            get
+            {
+                return editWorkCommand ??
+                    (editWorkCommand = new RelayCommand(_ =>
+                    {
+                        SelectedWork.TotalCostOfWork = WorkerOnSelectedWork.PricePerHour * SelectedWork.quantityHoursOfWork + selectedWork.CostOfMaterials;
+
+                        _typeOfWorkService.UpdateWork(SelectedWork);
+
+                        SelectedWorker = null;
+                    }));
+            }
+        }
+
+        private RelayCommand removeWorkCommand;
+        public RelayCommand RemoveWorkCommand
+        {
+            get
+            {
+                return removeWorkCommand ??
+                    (removeWorkCommand = new RelayCommand(obj =>
+                    {
+                        var workToRemove = obj as TypeOfWorkModel;
+                        if (workToRemove != null)
+                        {
+                            _typeOfWorkService.DeleteWork(workToRemove);
+                        }
+                    }));
+            }
+        }    
+
         public void Dispose()
         {
             _typeOfWorkService.WorkAddedEvent -= OnTypeOfWorkAdded;

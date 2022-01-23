@@ -74,8 +74,8 @@
                 <TextBlock DataContext="{Binding SelectedWork}" FontSize="21" FontWeight="Bold" TextAlignment="Left" Text="{Binding TotalCostOfWork}"/>
             </StackPanel>
 
-            <Button  Content="Edit" IsEnabled="{Binding IsEditBtnEnabled}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,5" Height="45"  Width="75" Cursor="Hand" Command="{Binding EditWorkCommand}" />
-            <Button  Content="remove" IsEnabled="{Binding IsRemoveBtnEnabled}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,5" Height="45"  Width="80" Cursor="Hand"  Command="{Binding RemoveWorkCommand}" CommandParameter="{Binding SelectedWork }"/>
+            <Button  Content="Edit" IsEnabled="{Binding IsEditRemoveBtnEnabled}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,5" Height="45"  Width="75" Cursor="Hand" Command="{Binding EditWorkCommand}" />
+            <Button  Content="Remove" IsEnabled="{Binding IsEditRemoveBtnEnabled}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,5" Height="45"  Width="80" Cursor="Hand"  Command="{Binding RemoveWorkCommand}" CommandParameter="{Binding SelectedWork }"/>
 
             <Border Margin="5,5,5,5" CornerRadius="10" Opacity="30" Background="Gray" BorderThickness="1" BorderBrush="Black" Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignToolBarMainPanelBorderStyle}">
                 <Grid>
