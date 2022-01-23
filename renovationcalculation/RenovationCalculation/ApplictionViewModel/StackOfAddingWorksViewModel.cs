@@ -14,10 +14,9 @@ namespace RenovationCalculation.ApplictionViewModel
         private readonly WindowNavService _windowNavService;
         private readonly TypeOfWorksService _typeOfWorkService;
         private readonly WorkersService _workersService;
-        private readonly TotalSumCounterService _totalSumCounter = new();
+        private readonly TotalSumCounterService _totalSumCounter = new();        
 
         private readonly WorkerModel _editWorkersSelection = new WorkerModel() { Name = "Add / Remove ..." };
-
         public ObservableCollection<TypeOfWorkModel> TypeOfWorks { get; }
         public ObservableCollection<WorkerModel> ListOfWorkers { get; }
               
@@ -42,14 +41,17 @@ namespace RenovationCalculation.ApplictionViewModel
             _typeOfWorkService.WorkUpdatedEvent += OnTypeOfWorkUpdated;
             _typeOfWorkService.WorkDeletedEvent += OnTypeOfWorkDeleted;
             TypeOfWorks.CollectionChanged += OnTypeOfWorksChanged;
+            EnteringOfQuantityofWork += OnEnteringQuantityOfWork;
+            EnteredCostOfMaterialsEvent += OnEnteredCostOfMaterials;
 
-           TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks); 
+
+            TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks); 
             _workersService = WorkersService.GetInstance();
             ListOfWorkers = new ObservableCollection<WorkerModel>(_workersService.GetAllWorkers());
             ListOfWorkers.Insert(0, _editWorkersSelection);
             _workersService.WorkerAddedEvent += OnWorkerAdded;
             _workersService.WorkerDeletedEvent += OnWorkerDeleted;    
-        }      
+        }
 
         private void OnTypeOfWorkAdded(TypeOfWorkModel work)
         {
@@ -126,25 +128,80 @@ namespace RenovationCalculation.ApplictionViewModel
             }
         }
 
-        private int enteredQuantityOfWork;
-        public int EnteredQuantityOfWork
+        private event Action EnteringOfQuantityofWork;
+        private string enteredQuantityOfWork;
+        public string EnteredQuantityOfWork
         {
             get { return enteredQuantityOfWork; }
+            set 
+            { 
+                enteredQuantityOfWork = value;
+                OnPropertyChanged();
+                EnteringOfQuantityofWork();
+            }
+        }
+        private int quantityOfWork;
+        public int QuantityOfWork
+        {
+            get { return quantityOfWork; }
             set
             {
-                enteredQuantityOfWork = value;
+                quantityOfWork = value;
                 OnPropertyChanged();
             }
         }
-        private int enteredCostOfMaterials;
-        public int EnteredCostOfMaterials
+        private void OnEnteringQuantityOfWork()
+        {
+            if (EnteredQuantityOfWork != null && EnteredQuantityOfWork.Length > 0)
+            {
+                int ParsedQuantityOfWork;
+                if (int.TryParse(EnteredQuantityOfWork, out ParsedQuantityOfWork))
+                {
+                    this.QuantityOfWork = ParsedQuantityOfWork;
+                }
+                else
+                {
+                    EnteredQuantityOfWork = EnteredQuantityOfWork.Remove(EnteredQuantityOfWork.Length - 1);
+                }
+            }
+        }
+
+        private event Action EnteredCostOfMaterialsEvent;
+        private string enteredCostOfMaterials;
+        public string EnteredCostOfMaterials
         {
             get { return enteredCostOfMaterials; }
             set
             {
                 enteredCostOfMaterials = value;
                 OnPropertyChanged();
+                EnteredCostOfMaterialsEvent();
             }
+        }
+        private int сostOfMaterials;
+        public int CostOfMaterials
+        {
+            get { return сostOfMaterials; }
+            set
+            {
+                сostOfMaterials = value;
+                OnPropertyChanged();
+            }
+        }
+        private void OnEnteredCostOfMaterials()
+        {
+            if (EnteredCostOfMaterials != null && EnteredCostOfMaterials.Length > 0)
+            {
+                int ParsedCostOfMaterials;
+                if (int.TryParse(EnteredCostOfMaterials, out ParsedCostOfMaterials))
+                {
+                    CostOfMaterials = ParsedCostOfMaterials;
+                }
+                else
+                {
+                    EnteredCostOfMaterials = EnteredCostOfMaterials.Remove(EnteredCostOfMaterials.Length - 1);
+                }
+            }            
         }
 
         private WorkerModel workerOnSelectedWork;
