@@ -32,7 +32,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <TextBox  Text="{Binding EnteredQuantityOfWork}" FontSize="20" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Quantity of hours" Cursor="IBeam" />
+                <TextBox  Text="{Binding EnteredQuantityOfWork, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Quantity of hours" Cursor="IBeam" AutomationProperties.HelpText="" />
 
                 <TextBox  Text="{Binding EnteredCostOfMaterials}" FontSize="20" materialDesign:HintAssist.Hint="Enter cost of materials:" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" />
             </StackPanel>

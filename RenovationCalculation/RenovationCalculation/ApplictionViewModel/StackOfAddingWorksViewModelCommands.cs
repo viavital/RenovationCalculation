@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using RenovationCalculation.Model;
 
 namespace RenovationCalculation.ApplictionViewModel
@@ -17,20 +18,29 @@ namespace RenovationCalculation.ApplictionViewModel
                 return addWorkCommand ??
                     (addWorkCommand = new RelayCommand(_ =>
                     {
-                        if (enteredNewWork != " " && enteredQuantityOfWork >= 0 && SelectedWorker != null)
+                        TypeOfWorkModel CreatingWork = new();
+                        if (enteredNewWork != null)
                         {
-                            TypeOfWorkModel CreatingWork = new();
-                            CreatingWork.typeOfWorkName = enteredNewWork;
-                            CreatingWork.quantityHoursOfWork = enteredQuantityOfWork;
+                            CreatingWork.typeOfWorkName = enteredNewWork.Trim();
+                            CreatingWork.quantityHoursOfWork = QuantityOfWork;
                             CreatingWork.CostOfMaterials = enteredCostOfMaterials;
-                            CreatingWork.WorkerID = SelectedWorker.ID;
-                            CreatingWork.TotalCostOfWork = SelectedWorker.PricePerHour * EnteredQuantityOfWork + enteredCostOfMaterials;
-
-                            _typeOfWorkService.AddWork(CreatingWork);
-                        }                        
-
+                            if (CreatingWork.typeOfWorkName != "" && CreatingWork.quantityHoursOfWork > 0 && SelectedWorker != null && CreatingWork.CostOfMaterials >=0)
+                            {  
+                                CreatingWork.WorkerID = SelectedWorker.ID;
+                                CreatingWork.TotalCostOfWork = SelectedWorker.PricePerHour * QuantityOfWork + enteredCostOfMaterials;
+                                _typeOfWorkService.AddWork(CreatingWork);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Inputed wrong data");
+                            }
+                        }      
+                        else
+                        {
+                            MessageBox.Show("Input name of work");
+                        }
                         EnteredNewWork = null;
-                        EnteredQuantityOfWork = 0;
+                        EnteredQuantityOfWork = null;
                         EnteredCostOfMaterials = 0;
                         SelectedWorker = null;
                     }));
