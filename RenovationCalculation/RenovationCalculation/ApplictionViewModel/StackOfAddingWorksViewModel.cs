@@ -42,9 +42,6 @@ namespace RenovationCalculation.ApplictionViewModel
             _typeOfWorkService.WorkUpdatedEvent += OnTypeOfWorkUpdated;
             _typeOfWorkService.WorkDeletedEvent += OnTypeOfWorkDeleted;
             TypeOfWorks.CollectionChanged += OnTypeOfWorksChanged;
-            EnteringOfQuantityofWork += OnEnteringQuantityOfWork;
-            EnteredCostOfMaterialsEvent += OnEnteredCostOfMaterials;
-
 
             TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks); 
             _workersService = WorkersService.GetInstance();
@@ -129,7 +126,6 @@ namespace RenovationCalculation.ApplictionViewModel
             }
         }
 
-        private event Action EnteringOfQuantityofWork;
         private string enteredQuantityOfWork;
         public string EnteredQuantityOfWork
         {
@@ -138,7 +134,7 @@ namespace RenovationCalculation.ApplictionViewModel
             { 
                 enteredQuantityOfWork = value;
                 OnPropertyChanged();
-                EnteringOfQuantityofWork();
+                OnEnteringQuantityOfWork();
             }
         }
         private int quantityOfWork;
@@ -176,8 +172,7 @@ namespace RenovationCalculation.ApplictionViewModel
                 }
             }
         }
-
-        private event Action EnteredCostOfMaterialsEvent;
+       
         private string enteredCostOfMaterials;
         public string EnteredCostOfMaterials
         {
@@ -186,7 +181,7 @@ namespace RenovationCalculation.ApplictionViewModel
             {
                 enteredCostOfMaterials = value;
                 OnPropertyChanged();
-                EnteredCostOfMaterialsEvent();
+                OnEnteredCostOfMaterials();
             }
         }
         private int сostOfMaterials;

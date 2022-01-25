@@ -18,8 +18,7 @@ namespace RenovationCalculation.ApplictionViewModel
             _workersService = WorkersService.GetInstance();
             Workers = new ObservableCollection<WorkerModel>(_workersService.GetAllWorkers());
             _workersService.WorkerAddedEvent += OnWorkerAdded;
-            _workersService.WorkerDeletedEvent += OnWorkerDeleted;
-            EnteredPricePerHourEvent += OnEnteredPricePerHourEvent;
+            _workersService.WorkerDeletedEvent += OnWorkerDeleted;            
         }
         private void OnWorkerAdded(WorkerModel worker)
         {
@@ -33,7 +32,7 @@ namespace RenovationCalculation.ApplictionViewModel
                 Workers.Remove(worker);
             }
         }
-        private void OnEnteredPricePerHourEvent()
+        private void OnEnteredPricePerHour()
         {
             if (EnteredPricePerHour != null && EnteredPricePerHour.Length > 0)
             {
@@ -60,7 +59,7 @@ namespace RenovationCalculation.ApplictionViewModel
             }
         }
 
-        private event Action EnteredPricePerHourEvent;
+       
         private string enteredpricePerHour;
         public string EnteredPricePerHour
         {
@@ -69,7 +68,7 @@ namespace RenovationCalculation.ApplictionViewModel
             {
                 enteredpricePerHour = value;
                 OnPropertyChanged();
-                EnteredPricePerHourEvent();
+                OnEnteredPricePerHour();
             }
         }
 
