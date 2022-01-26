@@ -22,5 +22,18 @@ namespace RenovationCalculation.Service
             addWorkerWindow.Closing += (s, e) => addWorkerVM.Dispose(); //added to clear all neded data inside view model (subscribtions) when window will be closed.
             addWorkerWindow.Show();
         }
+
+        public void AddInventoryWindow()
+        {
+            var addInventoryVM = new AddingInventoryViewModel();
+            var addInventoryWindow = new AddingInventoryWindow
+            {
+                DataContext = addInventoryVM
+            };
+
+            addInventoryVM.CloseAddInventoryWindowEvent += () => addInventoryWindow.Close();
+            addInventoryWindow.Closing += (s, e) => addInventoryVM.Dispose(); //added to clear all neded data inside view model (subscribtions) when window will be closed.
+            addInventoryWindow.Show();
+        }
     }
 }

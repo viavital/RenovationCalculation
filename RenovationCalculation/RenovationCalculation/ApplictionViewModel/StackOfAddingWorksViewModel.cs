@@ -312,7 +312,22 @@ namespace RenovationCalculation.ApplictionViewModel
                         }
                     }));
             }
-        }    
+        }
+
+        private RelayCommand showInventoryWindow;
+        public RelayCommand ShowInventoryWindow
+        {
+            get
+            {
+                return showInventoryWindow ??
+                    (showInventoryWindow = new RelayCommand(_ =>
+                    {
+                        _windowNavService.AddInventoryWindow();
+                    }));
+            }
+        }
+
+        
 
         public void Dispose()
         {

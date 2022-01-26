@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:ApplictionVewModel="clr-namespace:RenovationCalculation.ApplictionViewModel" x:Class="RenovationCalculation.MainWindow"
         mc:Ignorable="d"
-        Title="Calculation of renovating works" Height="500" Width="800" MinHeight="390" MinWidth="800">
+        Title="Calculation of renovating works" Height="500" Width="900" MinHeight="390" MinWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.6*"/>
@@ -45,6 +45,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="0.25*"/>
+                <RowDefinition Height="0.25*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -74,10 +75,21 @@
                 <TextBlock DataContext="{Binding SelectedWork}" FontSize="21" FontWeight="Bold" TextAlignment="Left" Text="{Binding TotalCostOfWork}"/>
             </StackPanel>
 
-            <Button  Content="Edit" IsEnabled="{Binding IsEditRemoveBtnEnabled}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,5" Height="45"  Width="75" Cursor="Hand" Command="{Binding EditWorkCommand}" />
-            <Button  Content="Remove" IsEnabled="{Binding IsEditRemoveBtnEnabled}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,5" Height="45"  Width="80" Cursor="Hand"  Command="{Binding RemoveWorkCommand}" CommandParameter="{Binding SelectedWork }"/>
+            <Button  Content="Edit" IsEnabled="{Binding IsEditRemoveBtnEnabled}" Grid.Column="0" Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,5" Height="45"  Width="75" Cursor="Hand" Command="{Binding EditWorkCommand}" />
+            <Button  Content="Remove" IsEnabled="{Binding IsEditRemoveBtnEnabled}" Grid.Column="0" Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,5" Height="45"  Width="85" Cursor="Hand"  Command="{Binding RemoveWorkCommand}" CommandParameter="{Binding SelectedWork }"/>
 
-            <Border Margin="5,5,5,5" CornerRadius="10" Opacity="30" Background="Gray" BorderThickness="1" BorderBrush="Black" Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignToolBarMainPanelBorderStyle}">
+            <Border Margin="5,5,5,5" CornerRadius="10" Opacity="30" Background="White" BorderThickness="1" BorderBrush="Black" Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignToolBarMainPanelBorderStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" FontSize="18" FontWeight="ExtraBold"  FontStretch="Expanded">Cost of building inventory:</Label>
+                    <TextBlock Text="{Binding SumOfInventory}" FontSize="20" FontWeight="ExtraBold" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,5,5,5" Style="{StaticResource MaterialDesignBody1TextBlock}">Lalala</TextBlock>
+                    <Button Grid.Row="1" Width="89" HorizontalAlignment="Left" Margin="5,0,5,5" Command="{Binding ShowInventoryWindow}"> Buy EQP</Button>
+                </Grid>
+            </Border>
+            <Border Margin="5,5,5,5" CornerRadius="10" Opacity="30" Background="Gray" BorderThickness="1" BorderBrush="Black" Grid.Column="1" Grid.Row="2" Style="{StaticResource MaterialDesignToolBarMainPanelBorderStyle}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
