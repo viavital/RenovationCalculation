@@ -1,5 +1,6 @@
 ﻿using RenovationCalculation.ApplictionViewModel;
 using RenovationCalculation.View;
+using System;
 
 namespace RenovationCalculation.Service
 {
@@ -10,6 +11,7 @@ namespace RenovationCalculation.Service
     // ось тут більше про це https://docs.microsoft.com/en-us/answers/questions/21808/opening-a-new-window-on-a-button-click-mvvm-wpf.html та https://stackoverflow.com/a/16173553
     class WindowNavService
     {
+        public event Action ClosingInventoryWindow;
         public void CreateAddWorkerWindow()
         {
             var addWorkerVM = new AddingWorkerViewModel();
@@ -31,8 +33,8 @@ namespace RenovationCalculation.Service
                 DataContext = addInventoryVM
             };
 
-            addInventoryVM.CloseAddInventoryWindowEvent += () => addInventoryWindow.Close();
-            addInventoryWindow.Closing += (s, e) => addInventoryVM.Dispose(); //added to clear all neded data inside view model (subscribtions) when window will be closed.
+            addInventoryVM.CloseAddInventoryWindowEvent += () =>  addInventoryWindow.Close();
+            addInventoryWindow.Closing += (s, e) => { addInventoryVM.Dispose(); ClosingInventoryWindow(); }; //added to clear all neded data inside view model (subscribtions) when window will be closed.
             addInventoryWindow.Show();
         }
     }

@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace RenovationCalculation.ApplictionViewModel
 {
-    partial class StackOfAddingWorksViewModel : INotifyPropertyChanged, IDisposable
+     class StackOfAddingWorksViewModel : INotifyPropertyChanged, IDisposable
     {
         private readonly WindowNavService _windowNavService;
         private readonly TypeOfWorksService _typeOfWorkService;
@@ -32,16 +32,29 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
+        private int sumOfInventory;
+        public int SumOfInventory
+        {
+            get { return sumOfInventory; }
+            set
+            {
+                sumOfInventory = value;
+                OnPropertyChanged();
+            }
+        }
+        
         public StackOfAddingWorksViewModel()
         {
             _windowNavService = new();            
 
             _typeOfWorkService = TypeOfWorksService.GetInstance();
-            TypeOfWorks = new ObservableCollection<TypeOfWorkModel>(_typeOfWorkService.GetAllWorks());           
+            TypeOfWorks = new ObservableCollection<TypeOfWorkModel>(_typeOfWorkService.GetAllWorks());
+            SumOfInventory = _totalSumCounter.CountSumOfInventory();
             _typeOfWorkService.WorkAddedEvent += OnTypeOfWorkAdded;
             _typeOfWorkService.WorkUpdatedEvent += OnTypeOfWorkUpdated;
             _typeOfWorkService.WorkDeletedEvent += OnTypeOfWorkDeleted;
             TypeOfWorks.CollectionChanged += OnTypeOfWorksChanged;
+            _windowNavService.ClosingInventoryWindow += OnClosingInventoryWindow;
 
             TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks); 
             _workersService = WorkersService.GetInstance();
@@ -49,6 +62,12 @@ namespace RenovationCalculation.ApplictionViewModel
             ListOfWorkers.Insert(0, _editWorkersSelection);
             _workersService.WorkerAddedEvent += OnWorkerAdded;
             _workersService.WorkerDeletedEvent += OnWorkerDeleted;    
+        }
+
+        private void OnClosingInventoryWindow()
+        {
+            SumOfInventory = _totalSumCounter.CountSumOfInventory();
+            TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
         }
 
         private void OnTypeOfWorkAdded(TypeOfWorkModel work)
@@ -326,16 +345,14 @@ namespace RenovationCalculation.ApplictionViewModel
                     }));
             }
         }
-
-        
-
         public void Dispose()
         {
             _typeOfWorkService.WorkAddedEvent -= OnTypeOfWorkAdded;
             _workersService.WorkerAddedEvent -= OnWorkerAdded;
             _typeOfWorkService.WorkUpdatedEvent -= OnTypeOfWorkUpdated;
             _typeOfWorkService.WorkDeletedEvent -= OnTypeOfWorkDeleted;
-            _workersService.WorkerDeletedEvent -= OnWorkerDeleted;            
+            _workersService.WorkerDeletedEvent -= OnWorkerDeleted;
+            _windowNavService.ClosingInventoryWindow -= OnClosingInventoryWindow;
         }
     }
 }

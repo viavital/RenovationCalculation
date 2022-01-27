@@ -12,10 +12,10 @@ namespace RenovationCalculation.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public int PriceOfInventory { get; set; }
-        public override string ToString()
-        {            
-            return Name+" - "+PriceOfInventory+"$";
-        }
+        //public override string ToString()
+        //{            
+        //    return Name+" - "+PriceOfInventory+"$";
+        //}
     }
 }
 

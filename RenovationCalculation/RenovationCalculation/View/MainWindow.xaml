@@ -85,18 +85,22 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" FontSize="18" FontWeight="ExtraBold"  FontStretch="Expanded">Cost of building inventory:</Label>
-                    <TextBlock Text="{Binding SumOfInventory}" FontSize="20" FontWeight="ExtraBold" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,5,5,5" Style="{StaticResource MaterialDesignBody1TextBlock}">Lalala</TextBlock>
-                    <Button Grid.Row="1" Width="89" HorizontalAlignment="Left" Margin="5,0,5,5" Command="{Binding ShowInventoryWindow}"> Buy EQP</Button>
+                    <TextBlock Text="{Binding SumOfInventory}" FontSize="20" FontWeight="ExtraBold" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,5,5,5" Style="{StaticResource MaterialDesignBody1TextBlock}"></TextBlock>
+                    <Button Grid.Row="1" Width="89" HorizontalAlignment="Left" Margin="5,0,5,5" Command="{Binding ShowInventoryWindow}">Buy EQP</Button>
                 </Grid>
             </Border>
             <Border Margin="5,5,5,5" CornerRadius="10" Opacity="30" Background="Gray" BorderThickness="1" BorderBrush="Black" Grid.Column="1" Grid.Row="2" Style="{StaticResource MaterialDesignToolBarMainPanelBorderStyle}">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="217*"/>
+                        <ColumnDefinition Width="52*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
-                        <RowDefinition/>                        
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" FontSize="19" FontWeight="ExtraBold" FontStretch="Expanded"> Total cost of renovation:</Label>
-                    <TextBlock Text="{Binding TotalSumOfRenovation}" FontSize="20" FontWeight="ExtraBold" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}">  </TextBlock>
+                    <Label Grid.Row="0" FontSize="19" FontWeight="ExtraBold" FontStretch="Expanded" Grid.ColumnSpan="2">Total cost of renovation:</Label>
+                    <TextBlock Text="{Binding TotalSumOfRenovation}" FontSize="20" FontWeight="ExtraBold" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="135,0,0,0"></TextBlock>
                 </Grid>
             </Border>
 
