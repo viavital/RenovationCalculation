@@ -14,8 +14,8 @@ namespace RenovationCalculation.Service
         public int CountTotalSum (ObservableCollection<TypeOfWorkModel> Works)
         {
            List<TypeOfWorkModel> ListOfWorks  = new List<TypeOfWorkModel>(Works);
-            int TotalSum = ListOfWorks.Sum(u => u.TotalCostOfWork);           
-            return TotalSum + CountSumOfInventory();
+           int TotalSum = ListOfWorks.Sum(u => u.TotalCostOfWork);           
+           return TotalSum + CountSumOfInventory();
         }
         public int CountSumOfInventory()
         {

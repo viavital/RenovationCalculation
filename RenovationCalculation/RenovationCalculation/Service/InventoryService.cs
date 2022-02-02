@@ -46,7 +46,7 @@ namespace RenovationCalculation.Service
             _allInventory.Add(inventory);
             InventoryAddedEvent(inventory);
         }
-            public void DeleteInventory(InventoryModel inventory)
+        public void DeleteInventory(InventoryModel inventory)
         {
             using (var db = new WorksDBContext())
             {

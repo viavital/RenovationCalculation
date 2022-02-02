@@ -45,8 +45,7 @@ namespace RenovationCalculation.ApplictionViewModel
         
         public StackOfAddingWorksViewModel()
         {
-            _windowNavService = new();            
-
+            _windowNavService = new();           
             _typeOfWorkService = TypeOfWorksService.GetInstance();
             TypeOfWorks = new ObservableCollection<TypeOfWorkModel>(_typeOfWorkService.GetAllWorks());
             SumOfInventory = _totalSumCounter.CountSumOfInventory();
@@ -64,45 +63,7 @@ namespace RenovationCalculation.ApplictionViewModel
             _workersService.WorkerDeletedEvent += OnWorkerDeleted;    
         }
 
-        private void OnClosingInventoryWindow()
-        {
-            SumOfInventory = _totalSumCounter.CountSumOfInventory();
-            TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
-        }
-
-        private void OnTypeOfWorkAdded(TypeOfWorkModel work)
-        {
-           TypeOfWorks.Add(work);           
-        }
-        private void OnTypeOfWorkUpdated(TypeOfWorkModel work)
-        {
-           int IndexOfUpdatedWork = TypeOfWorks.IndexOf(work);
-            //TypeOfWorkModel FindingWork = TypeOfWorks.FirstOrDefault(u => u.ID == work.ID); // при такому методі не викликається CollectionChanged
-            TypeOfWorks[IndexOfUpdatedWork] = work;
-            SelectedWork = default;      
-            WorkerOnSelectedWork = null;
-        }
-        private void OnTypeOfWorkDeleted(TypeOfWorkModel work)
-        {            
-            TypeOfWorks.Remove(work);            
-            WorkerOnSelectedWork = null;
-        }
-        private void OnTypeOfWorksChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
-        }
-        private void OnWorkerAdded(WorkerModel worker)
-        {
-            ListOfWorkers.Add(worker);
-        }
-
-        private void OnWorkerDeleted(WorkerModel worker)
-        {
-            if (ListOfWorkers.Contains(worker))
-            {
-                ListOfWorkers.Remove(worker);
-            }
-        }      
+        
 
         private string enteredNewWork;
         public string EnteredNewWork
@@ -166,32 +127,6 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
-        private bool isEditRemoveBtnEnabled;
-        public bool IsEditRemoveBtnEnabled
-        {
-            get { return isEditRemoveBtnEnabled; }
-            set
-            {
-                isEditRemoveBtnEnabled = value;
-                OnPropertyChanged();
-            }
-        }
-        private void OnEnteringQuantityOfWork()
-        {
-            if (EnteredQuantityOfWork != null && EnteredQuantityOfWork.Length > 0)
-            {
-                int ParsedQuantityOfWork;
-                if (int.TryParse(EnteredQuantityOfWork, out ParsedQuantityOfWork))
-                {
-                    this.QuantityOfWork = ParsedQuantityOfWork;
-                }
-                else
-                {
-                    EnteredQuantityOfWork = EnteredQuantityOfWork.Remove(EnteredQuantityOfWork.Length - 1);
-                }
-            }
-        }
-       
         private string enteredCostOfMaterials;
         public string EnteredCostOfMaterials
         {
@@ -213,6 +148,82 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
+
+        private WorkerModel workerOnSelectedWork;
+        public WorkerModel WorkerOnSelectedWork
+        {
+            get { return workerOnSelectedWork; }
+            set
+            {
+                workerOnSelectedWork = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isEditRemoveBtnEnabled;
+        public bool IsEditRemoveBtnEnabled
+        {
+            get { return isEditRemoveBtnEnabled; }
+            set
+            {
+                isEditRemoveBtnEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+        private void OnClosingInventoryWindow()
+        {
+            SumOfInventory = _totalSumCounter.CountSumOfInventory();
+            TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
+        }
+
+        private void OnTypeOfWorkAdded(TypeOfWorkModel work)
+        {
+            TypeOfWorks.Add(work);
+        }
+        private void OnTypeOfWorkUpdated(TypeOfWorkModel work)
+        {
+            int IndexOfUpdatedWork = TypeOfWorks.IndexOf(work);
+            TypeOfWorks[IndexOfUpdatedWork] = work;
+            SelectedWork = default;
+            WorkerOnSelectedWork = null;
+        }
+        private void OnTypeOfWorkDeleted(TypeOfWorkModel work)
+        {
+            TypeOfWorks.Remove(work);
+            WorkerOnSelectedWork = null;
+        }
+        private void OnTypeOfWorksChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            TotalSumOfRenovation = _totalSumCounter.CountTotalSum(TypeOfWorks);
+        }
+        private void OnWorkerAdded(WorkerModel worker)
+        {
+            ListOfWorkers.Add(worker);
+        }
+        private void OnWorkerDeleted(WorkerModel worker)
+        {
+            if (ListOfWorkers.Contains(worker))
+            {
+                ListOfWorkers.Remove(worker);
+            }
+        }
+        private void OnEnteringQuantityOfWork()
+        {
+            if (EnteredQuantityOfWork != null && EnteredQuantityOfWork.Length > 0)
+            {
+                int ParsedQuantityOfWork;
+                if (int.TryParse(EnteredQuantityOfWork, out ParsedQuantityOfWork))
+                {
+                    this.QuantityOfWork = ParsedQuantityOfWork;
+                }
+                else
+                {
+                    EnteredQuantityOfWork = EnteredQuantityOfWork.Remove(EnteredQuantityOfWork.Length - 1);
+                }
+            }
+        }
+       
+        
         private void OnEnteredCostOfMaterials()
         {
             if (EnteredCostOfMaterials != null && EnteredCostOfMaterials.Length > 0)
@@ -229,16 +240,7 @@ namespace RenovationCalculation.ApplictionViewModel
             }            
         }
 
-        private WorkerModel workerOnSelectedWork;
-        public WorkerModel WorkerOnSelectedWork
-        {
-            get { return workerOnSelectedWork; }
-            set 
-            { 
-                workerOnSelectedWork = value;
-                OnPropertyChanged();
-            }
-        }
+       
         private void ChangingSelectionOfWork()
         {
             if (SelectedWork != null)
@@ -352,7 +354,9 @@ namespace RenovationCalculation.ApplictionViewModel
             _typeOfWorkService.WorkUpdatedEvent -= OnTypeOfWorkUpdated;
             _typeOfWorkService.WorkDeletedEvent -= OnTypeOfWorkDeleted;
             _workersService.WorkerDeletedEvent -= OnWorkerDeleted;
+            TypeOfWorks.CollectionChanged -= OnTypeOfWorksChanged;
             _windowNavService.ClosingInventoryWindow -= OnClosingInventoryWindow;
+          
         }
     }
 }

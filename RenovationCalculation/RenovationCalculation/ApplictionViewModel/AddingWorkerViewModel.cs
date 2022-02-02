@@ -20,33 +20,7 @@ namespace RenovationCalculation.ApplictionViewModel
             _workersService.WorkerAddedEvent += OnWorkerAdded;
             _workersService.WorkerDeletedEvent += OnWorkerDeleted;            
         }
-        private void OnWorkerAdded(WorkerModel worker)
-        {
-            Workers.Add(worker);
-        }
-
-        private void OnWorkerDeleted(WorkerModel worker)
-        {
-            if (Workers.Contains(worker))
-            {
-                Workers.Remove(worker);
-            }
-        }
-        private void OnEnteredPricePerHour()
-        {
-            if (EnteredPricePerHour != null && EnteredPricePerHour.Length > 0)
-            {
-                int ParsedPricePerHour;
-                if (int.TryParse(EnteredPricePerHour, out ParsedPricePerHour))
-                {
-                    PricePerHour = ParsedPricePerHour;
-                }
-                else
-                {
-                    EnteredPricePerHour = EnteredPricePerHour.Remove(EnteredPricePerHour.Length - 1);
-                }
-            }
-        }
+        
 
         private string enteredNameOfNewWorker;
         public string EnteredNameOfNewWorker
@@ -92,6 +66,41 @@ namespace RenovationCalculation.ApplictionViewModel
                 selectedWorker = value;
                 OnPropertyChanged();
             }
+        }
+
+        private void OnWorkerAdded(WorkerModel worker)
+        {
+            Workers.Add(worker);
+        }
+
+        private void OnWorkerDeleted(WorkerModel worker)
+        {
+            if (Workers.Contains(worker))
+            {
+                Workers.Remove(worker);
+            }
+        }
+        private void OnEnteredPricePerHour()
+        {
+            if (EnteredPricePerHour != null && EnteredPricePerHour.Length > 0)
+            {
+                int ParsedPricePerHour;
+                if (int.TryParse(EnteredPricePerHour, out ParsedPricePerHour))
+                {
+                    PricePerHour = ParsedPricePerHour;
+                }
+                else
+                {
+                    EnteredPricePerHour = EnteredPricePerHour.Remove(EnteredPricePerHour.Length - 1);
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
         private RelayCommand addWorkerCommand;
@@ -140,12 +149,6 @@ namespace RenovationCalculation.ApplictionViewModel
             {
                 return closeWindowCommand ?? (closeWindowCommand = new RelayCommand(_ => CloseAddWorkerWindowEvent()));
             }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
         public void Dispose()

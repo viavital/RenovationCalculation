@@ -14,42 +14,14 @@ namespace RenovationCalculation.ApplictionViewModel
     class AddingInventoryViewModel : INotifyPropertyChanged, IDisposable    
     {
         private readonly InventoryService _inventoryService;
-
         public ObservableCollection<InventoryModel> InventoryList { get; }
 
         public AddingInventoryViewModel()
         {
-            _inventoryService = InventoryService.GetInstance();
+             _inventoryService = InventoryService.GetInstance();
             InventoryList = new ObservableCollection<InventoryModel>(_inventoryService.GetAllInventory());
             _inventoryService.InventoryAddedEvent += OnInventoryAdded;
             _inventoryService.InventoryDeletedEvent += OnInventoryDeleted;
-        }
-        private void OnInventoryAdded(InventoryModel inventory)
-        {
-            InventoryList.Add(inventory);
-        }
-
-        private void OnInventoryDeleted(InventoryModel inventory)
-        {
-            if (InventoryList.Contains(inventory))
-            {
-                InventoryList.Remove(inventory);
-            }
-        }
-        private void OnEnteredPriceOfInventory()
-        {
-            if (EnteredPriceOfInventory != null && EnteredPriceOfInventory.Length > 0)
-            {
-                int ParsedPrice;
-                if (int.TryParse(EnteredPriceOfInventory, out ParsedPrice))
-                {
-                    PriceOfInventory = ParsedPrice;
-                }
-                else
-                {
-                    EnteredPriceOfInventory = EnteredPriceOfInventory.Remove(EnteredPriceOfInventory.Length - 1);
-                }
-            }
         }
 
         private string enteredNameOfInventory;
@@ -81,10 +53,10 @@ namespace RenovationCalculation.ApplictionViewModel
             get { return priceOfInventory; }
             set
             {
-                priceOfInventory = value;
-                //  OnPropertyChanged();
+                priceOfInventory = value;               
             }
         }
+
         private InventoryModel selectedInventory;
         public InventoryModel SelectedInventory
         {
@@ -95,23 +67,41 @@ namespace RenovationCalculation.ApplictionViewModel
                 OnPropertyChanged();
             }
         }
-        
-        public event Action CloseAddInventoryWindowEvent;
-        private RelayCommand closeWindowCommand;
-        public RelayCommand CloseWindowCommand
+        private void OnEnteredPriceOfInventory()
         {
-            get
+            if (EnteredPriceOfInventory != null && EnteredPriceOfInventory.Length > 0)
             {
-                return closeWindowCommand ?? (closeWindowCommand = new RelayCommand(_ => CloseAddInventoryWindowEvent()));
+                int ParsedPrice;
+                if (int.TryParse(EnteredPriceOfInventory, out ParsedPrice))
+                {
+                    PriceOfInventory = ParsedPrice;
+                }
+                else
+                {
+                    EnteredPriceOfInventory = EnteredPriceOfInventory.Remove(EnteredPriceOfInventory.Length - 1);
+                }
             }
         }
+        private void OnInventoryAdded(InventoryModel inventory)
+        {
+            InventoryList.Add(inventory);
+        }
+
+        private void OnInventoryDeleted(InventoryModel inventory)
+        {
+            if (InventoryList.Contains(inventory))
+            {
+                InventoryList.Remove(inventory);
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-        
+
         private RelayCommand addInventoryCommand;
         public RelayCommand AddInventoryCommand
         {
@@ -147,6 +137,15 @@ namespace RenovationCalculation.ApplictionViewModel
                         }
                     }
                     ));
+            }
+        }
+        public event Action CloseAddInventoryWindowEvent;
+        private RelayCommand closeWindowCommand;
+        public RelayCommand CloseWindowCommand
+        {
+            get
+            {
+                return closeWindowCommand ?? (closeWindowCommand = new RelayCommand(_ => CloseAddInventoryWindowEvent()));
             }
         }
         public void Dispose()

@@ -11,7 +11,6 @@ namespace RenovationCalculation.Service
     {
         private WorkersService() { }
         private static WorkersService _instance;
-
         public static WorkersService GetInstance() //it should be singleton, because you need only one place to store data
         {
             if (_instance == null)
