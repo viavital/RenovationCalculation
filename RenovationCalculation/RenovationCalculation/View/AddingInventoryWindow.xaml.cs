@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RenovationCalculation.ApplictionViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,19 +11,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RenovationCalculation
+namespace RenovationCalculation.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для AddingInventoryWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AddingInventoryWindow : Window
     {
-        public MainWindow()
+        public AddingInventoryWindow()
         {
-            InitializeComponent();
+            InitializeComponent();           
         }
     }
 }
